@@ -1,0 +1,6 @@
+{
+  "name": "时空情境交互式英语学习游戏",
+  "description": "一款时空情境交互式英语学习闯关游戏，提供多种时空场景（如宫斗、宅斗、魔幻、都市等），结合故事剧情、关卡挑战、自选支线、商店道具、真题综合测验与AI助手，助你畅解英单、高分破关！",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
