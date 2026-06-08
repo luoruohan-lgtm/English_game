@@ -1204,7 +1204,11 @@ export default function App() {
                         <button
                           onClick={() => {
                             if (isUnlocked) {
-                              setSelectedMapNode({ num: levelNum, isBranch: false });
+                              if (isMilestone) {
+                                launchIntegratedExam(levelNum);
+                              } else {
+                                launchLevel(levelNum, false);
+                              }
                             } else {
                               alert(`命运迷雾！本大关暂未解锁。请优先斩获 LV.${levelNum - 1} 关卡！`);
                             }
@@ -1265,7 +1269,7 @@ export default function App() {
                             <button
                               onClick={() => {
                                 if (isBranchUnlocked) {
-                                  setSelectedMapNode({ num: levelNum, isBranch: true });
+                                  launchLevel(levelNum, true);
                                 } else {
                                   alert(`解密失败！该支线探访需要通关 LV.${levelNum} 主线才会开启！`);
                                 }
