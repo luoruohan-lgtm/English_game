@@ -1,5 +1,5 @@
-import { WordBookType, Word, ScenarioContext, ShopItem, ExamQuestion } from "./types";
-import { WORD_SENTENCES } from "./sentences";
+import { WordBookType, Word, ScenarioContext, ShopItem, ExamQuestion, StorySegment } from "./types";
+import { WORD_SENTENCES, getAdaptedWordSentence } from "./sentences";
 
 // Vocabularies for each Word Book in Simplified Chinese
 export const WORD_BOOKS: Record<WordBookType, Word[]> = {
@@ -89,7 +89,7 @@ export const WORD_BOOKS: Record<WordBookType, Word[]> = {
     { word: "sustainable", phonetic: "/səˈsteɪnəbl/", meaning: "可持续的，能维持的", distractors: ["一次性的", "脆弱的", "落后的"] },
     { word: "threshold", phonetic: "/ˈθreʃhəʊld/", meaning: "门槛，起点，临界值", distractors: ["终点", "核心", "高度"] },
     { word: "unprecedented", phonetic: "/ʌnˈpresɪdentɪd/", meaning: "空前的，史无前例的", distractors: ["司空见惯的", "落后的", "符合规律的"] },
-    { word: "viability", phonetic: "/ˌvaɪəˈbɪləti/", meaning: "生存能力，可行性", distractors: ["死亡率", "退化", "不可行"] },
+    { word: "viability", phonetic: "/ˌspace-around/", meaning: "生存能力，可行性", distractors: ["死亡率", "退化", "不可行"] },
     { word: "wastage", phonetic: "/ˈweɪstɪdʒ/", meaning: "消耗，浪费", distractors: ["积累", "回收", "保护"] },
     { word: "xenophobia", phonetic: "/ˌzenəˈfəʊbiə/", meaning: "仇外，排外惧怕", distractors: ["友好", "包容", "崇洋媚外"] },
     { word: "yield", phonetic: "/jiːld/", meaning: "产量，收益", distractors: ["投入", "亏损", "研发"] },
@@ -142,7 +142,6 @@ export const WORD_BOOKS: Record<WordBookType, Word[]> = {
     { word: "loquacious", phonetic: "/ləʊˈkweɪʃəs/", meaning: "多话的，滔滔不绝的", distractors: ["沉默寡言的", "愤怒的", "聪明的"] },
     { word: "magnanimous", phonetic: "/mæɡˈnænɪməs/", meaning: "宽宏大量的", distractors: ["小气的", "残忍的", "吝啬的"] },
     { word: "nefarious", phonetic: "/nɪˈfeəriəs/", meaning: "极坏的，邪恶的", distractors: ["善良的", "神圣的", "普通的"] },
-    { word: "obsequious", phonetic: "/əbToken/", meaning: "逢迎的，谄媚的", distractors: ["傲慢的", "诚实的", "公正的"] }, // Let's correct phonetic wait and keep word standard
     { word: "obsequious", phonetic: "/əbˈsiːkwiəs/", meaning: "逢迎的，谄媚的", distractors: ["傲慢的", "诚实的", "公正的"] },
     { word: "parsimonious", phonetic: "/ˌpɑːsɪˈməʊniəs/", meaning: "吝啬的，过度节俭的", distractors: ["慷慨的", "奢侈的", "贫穷的"] },
     { word: "recalcitrant", phonetic: "/rɪˈkælsɪtrənt/", meaning: "顽抗的，不驯服的", distractors: ["顺从的", "虚弱的", "热情的"] },
@@ -150,7 +149,7 @@ export const WORD_BOOKS: Record<WordBookType, Word[]> = {
     { word: "taciturn", phonetic: "/ˈtæsɪtɜːn/", meaning: "沉默寡言的", distractors: ["喋喋不休的", "开朗的", "暴躁的"] },
     { word: "ubiquity", phonetic: "/juːˈbɪkwəti/", meaning: "无处不在", distractors: ["罕见性", "局限性", "短暂性"] },
     { word: "vociferous", phonetic: "/vəʊˈsɪfərəs/", meaning: "喧嚷的，大声喊叫的", distractors: ["轻声的", "严肃的", "温柔的"] },
-    { word: "winsome", phonetic: "/ˈwɪnsəm/", meaning: "迷人的，警人喜爱的", distractors: ["讨人厌的", "高冷的", "丑陋的"] },
+    { word: "winsome", phonetic: "/ˈwɪnsəm/", meaning: "迷人的，讨人喜爱的", distractors: ["讨人厌的", "高冷的", "丑陋的"] },
     { word: "xenophile", phonetic: "/ˈzenəfaɪl/", meaning: "喜爱外国事物者", distractors: ["排外者", "爱国者", "无政府主义者"] },
     { word: "yoke", phonetic: "/jəʊk/", meaning: "枷锁，束缚", distractors: ["自由", "财富", "勋章"] },
     { word: "zealot", phonetic: "/ˈzelət/", meaning: "狂热分子，极端狂热者", distractors: ["温和派", "怀疑论者", "投机者"] },
@@ -213,7 +212,7 @@ export const SCENARIOS: ScenarioContext[] = [
   {
     id: "college_life",
     name: "大学生活 (致青春期)",
-    description: "这是一个充满阳光、汗水与微风的校园。你将重温温逃课、社团、期末考、向暗恋对象告白的悸动时光。答对单词，战胜严厉的教授，获得校园学神荣耀！",
+    description: "这是一个充满阳光、汗水与微风的校园。你将重温逃课、社团、期末考、向暗恋对象告白的悸动时光。答对单词，战胜严厉的教授，获得校园学神荣耀！",
     companionName: "小晴学姐",
     companionTitle: "学生会主席 / 热心学姐",
     companionIntro: "小晴学姐是校园里的人气风云人物，成绩优异且人脉极广。她总是在你迷茫时鼓励你，并把她的必考单词秘笈倾囊相授。",
@@ -271,8 +270,8 @@ export const SCENARIOS: ScenarioContext[] = [
     name: "武侠江湖 (群雄争霸)",
     description: "天下风云出我辈，一入江湖岁月催。你自小在师门长大，门派至宝被夺，毅然下山踏入正邪两道的惊涛骇浪。单词选对，即是化解对手暗器或出奇兵制胜的多变招式！",
     companionName: "婉儿",
-    companionTitle: "傲娇小师妹 / 侠义师弟",
-    companionIntro: "你的师门亲人，嘴硬心软。她/他轻功极高，每当你陷入围攻，便会拔剑和你并肩作战，通过背诵门派招式口诀（英文含义）暗中助你破敌。",
+    companionTitle: "傲娇小师妹",
+    companionIntro: "你的师门亲人，嘴硬心软。她轻功极高，每当你陷入围攻，便会拔剑和你并肩作战，通过背诵门派招式口诀协助你破敌。",
     currencyName: "武林声望值",
     currencyIcon: "🗡️",
     accentColor: "red",
@@ -280,6 +279,34 @@ export const SCENARIOS: ScenarioContext[] = [
     textCol: "text-red-400",
     cardBg: "bg-red-900/20 border-red-800/40"
   },
+  {
+    id: "mall_empire",
+    name: "商场帝国 (重商传奇)",
+    description: "临危受命，接手破产烂尾商场。通过精密的招商引资（答对单词），引进世界名流一线百货品牌，击退做空资本财团，一步步建立庞大的零售帝国！",
+    companionName: "林助理",
+    companionTitle: "得力商业助理",
+    companionIntro: "林助理毕业于名校，精通市场分析。她不仅是你的得力助手，更是商海拼搏中最温柔的港湾，助你运筹帷幄。",
+    currencyName: "商厦股份值",
+    currencyIcon: "🏢",
+    accentColor: "teal",
+    bgGradient: "from-teal-950 to-zinc-900",
+    textCol: "text-teal-400",
+    cardBg: "bg-teal-950/30 border-teal-850/40"
+  },
+  {
+    id: "detective_deduction",
+    name: "神探破案 (迷雾诡案)",
+    description: "贝克街深夜幽冷。多起谜案在大院发生。你作为名侦探大显身手，答对单词即可抽丝剥茧，寻得最隐秘的物证与真相，将凶手绳之以法！",
+    companionName: "华生",
+    companionTitle: "得力侦探助手",
+    companionIntro: "华生沉稳可靠，枪法精妙。他有条不紊地帮你整理卷宗与证言，也是你在暴风深林中最大的底牌。",
+    currencyName: "断案名气值",
+    currencyIcon: "🔍",
+    accentColor: "cyan",
+    bgGradient: "from-cyan-950 to-slate-900",
+    textCol: "text-cyan-400",
+    cardBg: "bg-cyan-950/30 border-cyan-850/40"
+  }
 ];
 
 export const SHOP_ITEMS: ShopItem[] = [
@@ -298,7 +325,7 @@ export const EXAM_QUESTIONS: Record<WordBookType, ExamQuestion[]> = {
       year: "剑桥雅思18真题 Test 3 Reading Passage 2",
       source: "雅思官方备考真题解析",
       passage: "The preservation of aquatic biodiversity has reached an unprecedented threshold. Empirical evidence shows that overfishing and the rapid depletion of critical nutrients have disrupted marine food webs, causing a catastrophe for coastal ecosystems. Environmental scientists mitigate these harmful impacts by championing sustainable aquaculture initiatives, yet the economic feasibility of such high-infrastructure designs remains highly debated in developing nations globally.",
-      question: "What does empty empirical evidence highlight about overfishing and nutrient depletion?",
+      question: "What does empirical evidence highlight about overfishing and nutrient depletion?",
       options: [
         "They provide significant demographic benefits to local fisherman communities.",
         "They have disrupted marine food webs and caused catastrophes for coastal ecosystems.",
@@ -313,7 +340,7 @@ export const EXAM_QUESTIONS: Record<WordBookType, ExamQuestion[]> = {
       type: "listening",
       year: "剑桥雅思17真题 Test 1 Listening Section 4",
       source: "雅思考试听力全套精解教程",
-      passage: "W: Moving on to our urban sustainability section, we must evaluate the demographic shifts in modern green suburbs. In older cities, infrastructure is often inadequate, leading to high levels of resource wastage.\nM: Indeed. Unless councils build viable sewage systems, standard aquatic life in local rivers will face catastrophic pollution. We must make ecological friendliness the threshold challenge for municipal budgets.",
+      passage: "W: Moving on to our urban sustainability section, we must evaluate the demographic shifts in modern green suburbs. In older cities, infrastructure is often inadequate, leading to high levels of resource wastage.\\nM: Indeed. Unless councils build viable sewage systems, standard aquatic life in local rivers will face catastrophic pollution. We must make ecological friendliness the threshold challenge for municipal budgets.",
       dialogue: "Two academics talking about urban green expansion and why inadequate infrastructure leads to severe environmental wastage.",
       question: "What is mentioned as a major outcome of inadequate infrastructure in older cities?",
       options: [
@@ -330,834 +357,35 @@ export const EXAM_QUESTIONS: Record<WordBookType, ExamQuestion[]> = {
   [WordBookType.TEM8]: []
 };
 
-/* CORRUPT_JUNK_START
-  const partnerPronoun = gender === "男" ? "小师妹" : "师弟";
-  const sonOrDaughter = gender === "男" ? "庶出少爷" : "庶出小姐";
-  const sonOrDaughterChao = gender === "男" ? "乘龙快婿" : "家族继承女千金";
-
-  const items = wordList.map((w, index) => {
-    let intro = "";
-    let choicePrompt = "";
-    const beatIndex = index; // The progressive step of the current question/word in the level
-    
-    switch (scenarioId) {
-      case "ancient_palace": {
-        if (isBranch) {
-          const intros = [
-            `【大宅支线 · 异光夜影】你听巧儿悄言说，冷角别院深夜隐隐有异光闪烁。你和巧儿轻手轻脚潜入旧阁，在积满灰尘的双层妆匣后，竟发现一封尘封已久的陈旧血密函。`,
-            `【大宅支线 · 生母遗物】密密麻麻的那行外国印章，让你这位 ${sonOrDaughter} 回忆起生母当年的死因，顿觉重重玄机与惊天阴谋都将被在此揭开。`,
-            `【大宅支线 · 旧案线索】密信里写着几行极其晦涩难懂的怪异洋文番书，透露了当年在海运买卖中被人做过手脚的铁证，需要极高阅历才能拆解。`,
-            `【大宅支线 · 蛛丝马迹】你想起生母留下的唯一遗物白玉坠，上面雕琢的洋印与密信如出一辙。这绝对不是寻常的装点物饰。巧儿为你在一旁掌灯。`,
-            `【大宅支线 · 阁内生变】旧阁大门外传来了林管家提灯巡游的沉重军靴声！如果不抓紧时间辨出这个字卡背后的洋咒，就会被当场捉包。`,
-            `【大宅支线 · 暗藏玄机】信内行文的最后一个隐蔽段落，居然暗示了陷害生母的下毒藏药具体案发地。只要掌握了这个字词，案件大白在即！`,
-            `【大宅支线 · 极限避让】林管家的手已经抓在了铜门栓上！巧儿急中生智，发出猫叫学猫抓墙将大管家引开。你紧咬嘴唇，背诵破译出密语。`,
-            `【大宅支线 · 黎明将至】你精确解读了旧案密信的最底处铁证！原来当年嫡母不仅暗中陷害，还侵吞了生母的所有私房钱。你暗暗誓要夺回一切！`
-          ];
-          const prompts = [
-            `细细摩挲尘封信函上这个散发特殊香气的 **${w.word}** (${w.phonetic}) 单词：`,
-            `解读血书中这个触目惊心、揭露家族恩怨的 **${w.word}** (${w.phonetic}) 字彙：`,
-            `破解往来海运账本中这个指向利益纠葛的 **${w.word}** (${w.phonetic}) 关键字：`,
-            `将玉坠上的暗印和密信上的 **${w.word}** (${w.phonetic}) 完美对碰重组：`,
-            `在巡视灯火逼近前，锁定此处的生僻 **${w.word}** (${w.phonetic}) 单词，以掩人耳目：`,
-            `看破密信下半卷最难解的这一个 **${w.word}** (${w.phonetic}) 剧毒药物线索：`,
-            `巧儿用尽计策拖延，你必须争分夺秒，答对此致命 **${w.word}** (${w.phonetic}) 字谜：`,
-            `在此至关重要的节骨眼上，辨识此生母绝笔的 **${w.word}** (${w.phonetic}) 秘密：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        } else {
-          const intros = [
-            `【第 ${levelNum} 关 · 嫡母发难】清晨，主苑传来茶盏摔碎的脆响。威严的嫡母端坐在金丝楠木椅上，挑剔地审视着你：『平时不好好念书，成何体统！』旁边的大少爷在一旁煽风点火。今天若是这道难题答不出来，便要罚你去克扣三个月例银。巧儿在袖底紧张得直扯你的衣角。`,
-            `【第 ${levelNum} 关 · 二姐挑衅】二小姐在一旁轻蔑挑唆，嫌恶地将一行洋金箔字推到你面前：『庶出就要有庶出的本分，一个字不识，活该被赶出府去！』你冷眼看着这恶意满满的开端。`,
-            `【第 ${levelNum} 关 · 众人看戏】大少爷也不怀好意地嘲讽：『想必二妺的题目是高深无比，这庶出哪知道书院的妙处。』你高举下颌，冷静审视着这一道恶意挑衅。`,
-            `【第 ${levelNum} 关 · 妙口回击】你负手而立，不惊不怖。你朱唇微启，引经据典，将这洋词字句的出处和底层文化剖析得极度透彻，令高台上的嫡母面色微微一变。`,
-            `【第 ${levelNum} 关 · 掌管到场】此时，府上极其势利的王大管家拿着西洋行商的最新海运清单入内：『老爷正在偏厅对账，有西域来信看不明白，急召有才之人。』二小姐听罢面露难色。`,
-            `【第 ${levelNum} 关 · 破案核账】你不慌不忙地接过货清单扫过，立刻点出了其中克扣公银、虚报货额的猫迹，管家大惊失色，对你投来佩服的目光。`,
-            `【第 ${levelNum} 关 · 嫡母语塞】二小姐和二少爷急着为你辩护纠错，却被你滴水不漏的反驳堵得哑口无言。巧儿对你投来极其崇拜的星星眼。`,
-            `【第 ${levelNum} 关 · 收伏管家】在主苑百名丫鬟长随的屏息见证下，你将那份让老爷头疼的西域信件翻译得圆满高雅。在这波诡云谲的深宅中，你终于用实力为自己赢得了第一抹真正的威信！`
-          ];
-          const prompts = [
-            `面对嫡母摔落茶盏的劈头盖脸训斥，你要用惊艳的 **${w.word}** (${w.phonetic}) 知识撑住场面：`,
-            `冷哼反击二小姐的讥嘲，点出这个极其生疏的 **${w.word}** (${w.phonetic}) 单词含义：`,
-            `在旁人推波助澜、恶评满满的重压下，解密这个 **${w.word}** (${w.phonetic}) 学术词汇：`,
-            `在嫡母满是惊诧的凝视中，大声读出此番字 **${w.word}** (${w.phonetic}) 的高深意境：`,
-            `辨识海运清单中最让人头疼的财务 **${w.word}** (${w.phonetic}) 核心用语：`,
-            `�export function getHybridSentence(w: Word, translation: string): string {
-  if (!translation) return "";
-  const word = w.word; // e.g. "confused"
-  const meaning = w.meaning; // e.g. "困惑的，糊涂的"
-  
-  // Potential terms to replace in translation
-  // e.g. "困惑的", "糊涂的"
-  const parts = meaning.split(/[，,、；;()（）]/).map(p => p.trim()).filter(Boolean);
-  const searchTermsSet = new Set<string>();
-  
-  for (const part of parts) {
-    searchTermsSet.add(part);
-    
-    // strip suffixes
-    if (part.endsWith("的") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    if (part.endsWith("地") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    if (part.endsWith("得") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    if (part.endsWith("了") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    
-    // strip prefixes
-    if (part.startsWith("使") && part.length > 1) {
-      searchTermsSet.add(part.slice(1));
-    }
-    if (part.startsWith("被") && part.length > 1) {
-      searchTermsSet.add(part.slice(1));
-    }
-    if (part.startsWith("让") && part.length > 1) {
-      searchTermsSet.add(part.slice(1));
-    }
-  }
-  
-  // Sort by length descending
-  const searchTerms = Array.from(searchTermsSet)
-    .filter(term => term && term.length >= 1)
-    .sort((a, b) => b.length - a.length);
-
-  // Try to replace the matched Chinese part
-  for (const term of searchTerms) {
-    if (translation.includes(term)) {
-      return translation.replace(term, word);
-    }
-  }
-
-  // Fallback: search template substrings
-  for (const part of parts) {
-    for (let len = part.length; len >= 2; len--) {
-      for (let start = 0; start <= part.length - len; start++) {
-        const sub = part.substring(start, start + len);
-        if (sub !== "的" && sub !== "的了" && translation.includes(sub)) {
-          return translation.replace(sub, word);
-        }
-      }
-    }
-  }
-
-  // Final fallback
-  if (translation.endsWith("。") || translation.endsWith("！") || translation.endsWith("？")) {
-    const punc = translation.slice(-1);
-    return `${translation.slice(0, -1)} (${word})${punc}`;
-  }
-  return `${translation} (${word})`;
-}
-
-export function generateStoryContent(
-  scenarioId: string,
-  levelNum: number,
-  wordList: Word[],
-  isBranch: boolean = false,
-  gender: "男" | "女" = "男"
-): StorySegment[] {
-  const scenario = SCENARIOS.find(s => s.id === scenarioId) || SCENARIOS[0];
-  
-  // Custom roles and pronouns based on gender selection
-  const selfTitle = gender === "男" ? "大少爷" : "大小姐";
-  const partnerPronoun = gender === "男" ? "小师妹" : "师弟";
-  const sonOrDaughter = gender === "男" ? "庶出少爷" : "庶出小姐";
-  const sonOrDaughterChao = gender === "男" ? "乘龙快婿" : "家族继承女千金";
-
-  const items = wordList.map((w, index) => {
-    let intro = "";
-    let choicePrompt = "";
-    const match = WORD_SENTENCES[w.word.toLowerCase()];
-    const zhTranslation = match ? match.translation : "";
-    const hybridSentence = getHybridSentence(w, zhTranslation);
-    
-    switch (scenarioId) {
-      case "ancient_palace":
-        if (isBranch) {
-          intro = `【大宅支线 · 秘密探秘】你听巧儿悄言说，冷角别院深夜隐隐有异光闪烁。你和巧儿轻手轻脚潜入旧阁，在积满灰尘的双层妆匣后，发现一封尘封已久的陈旧血书。上面歪歪扭扭地写着：<b>“${hybridSentence}”</b> 这一惊人细节让你位 ${sonOrDaughter} 回忆起生母当年的死因，顿觉重重玄机掩盖……`;
-        } else {
-          intro = `【第 ${levelNum} 关：初显锋芒】威严的嫡母坐在金丝楠木椅上盯视着你，旁边的大少爷添油加醋地对你讥讽挑衅。今天若是这道官司说不清，便要罚你去守柴房扣月钱。你毫无惧色，不紧不慢地上前交底：<b>“${hybridSentence}”</b> 这一席直击痛处的大实话，顿时让嫡母大惊失色、哑口无言！`;
-        }
-        break;
-        
-      case "imperial_court":
-        if (isBranch) {
-          intro = `【御花园支线 · 琴定千秋】月华朦胧，你轻执古琴在太液池畔低诵。高墙树影微动，深受皇上赏识的羽林军统领悄然走至你身后，对你含胸一礼笑道：『娘娘/才人这番言语 <b>“${hybridSentence}”</b>，琴心流露，委实非同凡响。』在这步步杀机的后宫，竟能得遇如此知音，令你心中荡起涟漪。`;
-        } else {
-          intro = `【第 ${levelNum} 关：御前诗会】皇上今日驾临御花园，全宫秀女御前诗会考核大典开启。不怀好意的丽贵妃向皇上进言让你即兴发声赋诗献艺。四周秀女都在等着看你出丑。你一袭华美长裙，款款下拜，口中轻吐出的佳作竟是这般妙语惊人：<b>“${hybridSentence}”</b> 圣上听毕抚掌大笑，龙颜大悦，连连赏赐你翡翠步摇，丽贵妃恨得咬碎了指甲！`;
-        }
-        break;
-        
-      case "modern_city":
-        if (isBranch) {
-          intro = `【魔都支线 · 商务洽谈】周末酒会上，外滩华灯璀璨。一位身价数亿的外资投行合伙人朝你频频举杯，好奇打听你对行业估值与战略体系的见解。你整理了一下西装，熟练说出核心推演：<b>“${hybridSentence}”</b> 这一番论述，侃侃而谈，词辨犀利，令对方对你的跨国商务素养叹服不已。`;
-        } else {
-          intro = `【第 ${levelNum} 关：职场巅峰】周一清晨，高冷的Linda总监把英法双语商业报告重重砸在你的工位上，限时下午两点重新组装PPT汇报，否则直接开除。面对故意刁难，你顶住压力当着全体高层的面侃侃而谈，直接抛出了你的核心论断：<b>“${hybridSentence}”</b> 无懈可击的洞察吓得总监一言发，直接奠定了你在公司的核心地位！`;
-        }
-        break;
-        
-      case "college_life":
-        if (isBranch) {
-          intro = `【校园支线 · 迎新风采】校吉他社在操场举办篝火晚会。人气社长将木吉他递前几分：『${selfTitle}，要不要来段即兴Solo点燃全场？』在数十名学弟学妹的热烈欢呼声中，你歌喉轻启，唱出了这首婉转唯美的歌词：<b>“${hybridSentence}”</b> 篝火旁瞬间爆发出排山导海的欢呼与掌声！`;
-        } else {
-          intro = `【第 ${levelNum} 关：考场对弈】大阶梯教室里，严厉的张教授一指黑板：『倒数第二排开小差的那位，你上来把这道答卷解了！』全班百人目光齐聚你身上。你大步走上讲台，提起粉笔，顺畅无阻地在黑板上书写了例证：<b>“${hybridSentence}”</b> 绝美解题让全班爆发出雷鸣般的喝彩，张教授也摘下眼镜连连点头！`;
-        }
-        break;
-        
-      case "fantasy_adventure":
-        if (isBranch) {
-          intro = `【奥术支线 · 古神遗迹】在迷失沼泽深处的世界树残骸前，巨熊石阵燃起奥数幽火。随着你一步踏入，地面瞬间涌现出散发着蓝色极光的古代咒文：<b>“${hybridSentence}”</b> 你立刻吸纳这股浩瀚奥能，感悟到星海中玄妙的奥数精髓……`;
-        } else {
-          intro = `【第 ${levelNum} 关：禁咒吟唱】你高高擎着魔导书挡住地精骑兵。领队的黑魔法祭司狂妄至极。危急关头，阿卡多金钥将神圣的高阶吟唱语映入你脑海。你当即释放体内极限法力高声颂出：<b>“${hybridSentence}”</b> 一道遮天蔽日的黄金守护符文盾瞬间在大地上轰然撑起，将敌方巫术彻底震飞！`;
-        }
-        break;
-        
-      case "showbiz_superstar":
-        if (isBranch) {
-          intro = `【巨星支线 · 整蛊突袭】半夜突袭整蛊节目的摄像机深夜推开。猝不及防、纯素颜未饰的你面对高频聚光灯，依然神色自若。你面向镜头展现出不可思议的高情商风度，大方流利地说道：<b>“${hybridSentence}”</b> 惊艳的表现不仅成功破梗，更收割了一波狂暴活粉！`;
-        } else {
-          intro = `【第 ${levelNum} 关：剧组狂飙】《至尊风云》摄影棚里，欺负新人的副导演故意晾了你三小时，百般嘲弄。沈姐冷静地塞给你一页临时修改的重头戏台词。你红装走入镜头，眼神一瞬含泪，演技爆发：<b>“${hybridSentence}”</b> 完美的台词功力震撼全场，副导演脸上青红交替，一句话也说不出来！`;
-        }
-        break;
-        
-      case "husband_rebound":
-        if (isBranch) {
-          intro = `【神豪支线 · 拍卖会反爆】珠宝拍卖会上，势利大姑子百般嘲笑你是买不起赠品的穷叫花。大管家拍手送上了全球尊贵黑金卡与千亿代理合同。在一众名流屏息瞩目下，你神定气闲，扬眉吐出一串流利的反诘：<b>“${hybridSentence}”</b> 锋芒反吞全场，大姑子吓得当场脸如白纸！`;
-        } else {
-          intro = `【第 ${levelNum} 关：赘婿/赘媳扬眉吐气】丈母娘过寿，你奉上贺礼，却被刻刻毒的大姑嘲笑为丢人现眼的地摊货。众人蜂拥附和。正当羞辱爆发，门被隆重撞开，十辆迈巴赫一字排开，首富管家领着百名西装保镖齐齐跪迎：『恭迎${gender === "男" ? "姑爷" : "少夫人"}回归！』你缓缓整理风衣，居高临下地面向林家上下冷声吐辞：<b>“${hybridSentence}”</b> 一朝大权在握，林家上下瞬间吓得瘫软跪倒！`;
-        }
-        break;
-        
-      case "wuxia_jianghu":
-        if (isBranch) {
-          intro = `【江湖支线 · 临仙幽篁】你与${partnerPronoun}在清幽竹林间运功。反派死对头带四大罗汉突袭。${partnerPronoun}咬牙飞身挡在你身前，高声宣告：『师门第十式：<b>“${hybridSentence}”</b> 咱们生死并肩，绝不叫邪门歪道小瞧！』`;
-        } else {
-          intro = `【第 ${levelNum} 关：正邪对决】华山险隘，寒风刺骨，叛徒领暗器如雨破空而来。千钧一发之际，你回想起师祖的无上遗训，将平生功力在一瞬灌注到长剑之上，长剑长啸，吐气出招：<b>“${hybridSentence}”</b> 一剑东来，直取对方致命死穴，杀局瞬间被荡得干干净净！`;
-        }
-        break;
-        
-      case "mall_empire":
-        if (isBranch) {
-          intro = `【商场支线 · 品牌大招商】招商沙龙上，国际一线轻奢大牌总裁态度不冷不热。你神情自若，指点沙盘，用完美的商业手笔流畅总结：<b>“${hybridSentence}”</b> 这无懈可击的前瞻性战略架构，令高傲的亚太区总裁当场惊叹佩服！`;
-        } else {
-          intro = `【第 ${levelNum} 关：破产逆袭战】逆水行舟，你临危接班废墟商场。在行业听证会兼对赌大会上，前任采购内鬼带人恶意起哄逼迫你出课。你冷笑上前，指引大屏幕上的精密剖析大计，慷慨词严：<b>“${hybridSentence}”</b> 震聋发聩的数据剖析击穿了对手的所有骗局，全场起立喝彩！`;
-        }
-        break;
-        
-      case "detective_deduction":
-        if (isBranch) {
-          intro = `【侦探支线 · 窗台密信】深夜贝克街，迷雾缭绕。一只白羽雪枭敲窗，腿上系着苏格兰场的精密铜扣锁，里头赫然藏着半张未损烧焦、极富条理的密信纸条：<b>“${hybridSentence}”</b> 这致命线索，为解开庄园大盗悬案提供了至关重要的拼图。`;
-        } else {
-          intro = `【第 ${levelNum} 关：破案如洗】古老庄园的密闭大厅内，男爵拍桌大骂你中伤名流。你慢条斯理地解开厚重大衣，将从挂钟夹缝里搜出的陈旧纸条拍在桌案：『男爵，那你如何解释当时死者衣襟里遗留下的这条惊天线索：<b>“${hybridSentence}”</b>！』罪名昭彰，男爵浑身剧烈颤抖，颓然瘫倒认罪！`;
-        }
-        break;
-        
-      default:
-        if (isBranch) {
-          intro = `【修道支线】时空星轨中闪烁着金色奥妙能量。你循着指示，参破了能量柱上镌刻着的千载古语：<b>“${hybridSentence}”</b> 你体悟非凡，顺利走完了这段修行支路！`;
-        } else {
-          intro = `【第 ${levelNum} 关：境界考验】在无边无际的求学历程中，星光结界再次从云雾端降落，阻拦你前行。你注视着悬浮于虚空中的神圣古句，其言曰：<b>“${hybridSentence}”</b> 参透其中真谛即可破阵前行。`;
-        }
-        break;
-    }.phonetic})，赢得御前圣恩：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      case "modern_city": {
-        if (isBranch) {
-          const intros = [
-            `【魔都支线 · 商务洽谈】周末酒会上，黄浦江畔华灯璀璨，外滩凉风习习。Leo拉着你挤进高端风投圈，引荐了一位身价上亿的美股基金合伙人给你认识。`,
-            `【魔都支线 · 大佬设局】合伙人摇晃着手里的马提尼，有些居高临下地朝你频频发问，企图考核你这个职场萌新对高科技企业估值波动的理解。`,
-            `【魔都支线 · 闺蜜助阵】Leo在旁边优雅地向人举杯，一边拼命用手指沾香槟在吧台上勾画行业密语，顺带给你一个“稳住”的信任眼神。`,
-            ` =`你整理了修身的定制西服，用一口极其纯正地道的国际高订英语娓娓道来，完美解答了第一个评估行话，全场名媛纷纷赞叹。`,
-            `【魔都支线 · 趁热打铁】合伙人精神一振，面露惊艳，指了指手边智能眼镜上投出的重组财报：『有点意思，那这第二个核心并购词彙呢？』`,
-            `【魔都支线 · 华丽过关】在名流社交高压圈的聚焦中，面对竞争对手嫉恨的目光，你优雅淡定，谈吐专业自信风流。`,
-            `【魔都支线 · 胜局倾斜】你轻描淡写地和合伙人口若悬河，一口气解析了多重复合商业单词。Leo悄悄对你比了一个“大获全胜”的胜利手势。`,
-            `【魔都支线 · 巅峰合约】所有刁难的顶级行业英文词彙被你彻底破译！合伙人当场递过私人烫金名片，力邀你加入下周上亿级的并购项目主管！`
-          ];
-          const prompts = [
-            `抿了一口红酒，你要用最傲人的商业思维解出 **${w.word}** (${w.phonetic}) 的真实含义：`,
-            `在大佬轻蔑的唇枪舌战中，准确指正他对这个 **${w.word}** (${w.phonetic}) 金融词的解读：`,
-            `读懂Leo在吧台酒渍上悄悄留下的 **${w.word}** (${w.phonetic}) 提示词义：`,
-            `以一介精英白领的霸气和才华，瞬间秒杀这个生僻 **${w.word}** (${w.phonetic}) 词汇：`,
-            `在合伙人热切和赏识的目光逼问下，精准告知此 **${w.word}** (${w.phonetic}) 金融释义：`,
-            `在这高攀名流的核心社交场所，高分拿下这个至上 **${w.word}** (${w.phonetic}) 评级：`,
-            `在一众大鳄合伙人的侧目赞叹中，流畅破解此处的 **${w.word}** (${w.phonetic}) 细节：`,
-            `用无懈可击的外语才智拿下最后一个 **${w.word}** (${w.phonetic}) 合同条款：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        } else {
-          const intros = [
-            `【第 ${levelNum} 关 · 周一晨会】周一清晨，高冷的Linda女总监黑着脸把一叠英法双语商业巨案扔在你的工位上：『下午分析会，大家要是答不出这些词汇，直接卷铺盖走人！』`,
-            `【第 ${levelNum} 关 · 同行使绊】平时暗中使坏、和你抢高管转正名额的死对头实习生在一旁幸灾乐祸：『哎呀，这重组案的第一个商业生僻字可真难，你别卡壳啊。』`,
-            `【第 ${levelNum} 关 · 闺蜜打气】Leo用马克杯朝你敬了一敬，悄悄鼓励你：『Linda只是虚张声势，相信你的高能词彙本！』你闻言稍微平复了心跳。`,
-            `【第 ${levelNum} 关 · 专业发声】下午会议上你赫然站起，一口流利的发言，完美重设并深度解释了第一个要命核心词的大局价值，惊呆全办公室。`,
-            `【第 ${levelNum} 关 · 总监再考】Linda在屏幕上划出第二道供应链金融难关：『有点深度。那如果这第二个专业分析词汇又是何意？谁能上来？』`,
-            `【第 ${levelNum} 关 · 竞争退败】死对头实习生急着露脸抢答，却解得牛头不对马嘴十分难看，被Linda严厉呵斥退下。Linda高冷的美眸再次扫向你。`,
-            `【第 ${levelNum} 关 · 职场狂飙】你潇洒在投影白板上写下对随后几个高难道商务英文词汇的解答，落笔如风，分析精细无常。`,
-            `【第 ${levelNum} 关 · 逆袭转正】随着最后一个供应链生涩单词被你完美答出，全办公室爆起雷鸣般的服气掌声！Linda满意地合上电脑：『实习生，立刻来办公室办金牌转正！』`
-          ];
-          const prompts = [
-            `顶着Linda女魔头沉重的高压目光，先将第一个极其棘手的 **${w.word}** (${w.phonetic}) 词汇答对：`,
-            `冷笑回怼死对头实习生的出洋相奚落，辨出最核心的 **${w.word}** (${w.phonetic})：`,
-            `仔细审阅Linda砸过来的法文商业企划书，圈定关键 **${w.word}** (${w.phonetic}) 词义：`,
-            `像一名高冷金融总裁那样信心满满发表对这个 **${w.word}** (${w.phonetic}) 的高深高见：`,
-            `挑战Linda拉出的供应链评估方案，解锁这只 **${w.word}** (${w.phonetic}) 并购高级词：`,
-            `在死对头实习生极其不甘的注视下，潇洒破解此处的 **${w.word}** (${w.phonetic}) 考核：`,
-            `像真正的名流掌权者般，点出下面 **${w.word}** (${w.phonetic}) 的精准商业出处：`,
-            `在全公司的欢呼惊呼中，解密最后一个奠定胜势的 **${w.word}** (${w.phonetic}) 重点：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      case "college_life": {
-        if (isBranch) {
-          const intros = [
-            `【校园支线 · 迎新晚会】晚风熏人，校吉他社在东操场心举办篝火大晚会。人气小晴学姐抱着那把名牌吉他站在光晕中心，朝你俏皮地点了点下巴。`,
-            `【校园支线 · 佳人同歌】学姐将闪光的电容麦克风递了过来：『${selfTitle}，要不要上来和学姐合唱一首英文古典金曲，展示一下你的即兴歌词造句？』`,
-            `【校园支线 · 欢呼冲天】底下围坐的数百名学弟学妹和社员疯狂拍手起哄。你脸颊有些发烫，但深呼吸看着学姐大方的笑靥，毅然大步迈出。`,
-            `【校园支线 · 妙曲天成】吉他乐符悠扬飘开。你随律起舞，完美在意境深渊中歌声流露，精准翻译出第一句英文歌词的高雅核心，惊艳全操场。`,
-            `【校园支线 · 繁复多变】学姐长指滑动琴弦，曲风骤转为略带爵士的生僻古典英文高音韵。你含笑接下这更具挑战的歌台。`,
-            `【校园支线 · 琴音未央】篝火将小晴学姐和你的青涩身影拉得唯美而修长。在众学子的崇拜尖叫中，你的自如口语将晚会推向最高峰。`,
-            `【校园支线 · 词中有意】接近终局副歌，歌词中浮现了极高难度的四级/六级/雅思备考大词，小晴学姐向你投来美目盈盈的期待，快解开它！`,
-            `【校园支线 · 校园红人】最后一首浪漫吉他英文词被你精妙回响破译！全操场千人起立为你欢呼挥舞荧光棒！学姐红着脸对你说：『今晚的你，太闪耀了。』`
-          ];
-          const prompts = [
-            `伴着篝火的暖风与吉他琴音，完美将第一个曼妙的 **${w.word}** (${w.phonetic}) 唱入歌词意境：`,
-            `不辜负小晴学姐拉你上台的信任，翻译此代表青春的 **${w.word}** (${w.phonetic}) 歌词核心：`,
-            `大方上前握住麦克风，在数百人的口哨起哄中，展现对此 **${w.word}** (${w.phonetic}) 的大方理解：`,
-            `随着律动的拍子，精准道出这个高频学术 **${w.word}** (${w.phonetic}) 的贴切翻译：`,
-            `在学姐吉他转调的高难伴奏下，接住这句略带忧愁的 **${w.word}** (${w.phonetic}) 词：`,
-            `将温和的琴声与你口中的 **${w.word}** (${w.phonetic}) 完美统一，解破它的含义：`,
-            `为了达成和佳人的最高契合合声，解出这个难度暴增的 **${w.word}** (${w.phonetic})：`,
-            `在千万同学挥舞的火烛和尖叫中，完美拼读最后一个 **${w.word}** (${w.phonetic}) 音节：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        } else {
-          const intros = [
-            `【第 ${levelNum} 关 · 课堂突袭】大阶梯教室里，严厉的张教授正在黑板上板书极为繁琐复杂的微分定理。他一敲黑板：『坐在倒数第二排开小差的同学，上来把这答卷解了！』`,
-            `【第 ${levelNum} 关 · 大班审判】在百人瞩目下，你心跳极速加快。但看着严罗王铁面无私、甚至要在平时成绩中给你直接挂科记过，你暗道危急。`,
-            `【第 ${levelNum} 关 · 学姐笔记本】你慌乱正要站起身，一侧的小晴学姐把她画满荧光色考点的高频词彙本悄悄往你这挪了一分：『别怕，答案就在最后一页印着。』`,
-            `【第 ${levelNum} 关 · 霸气答辩】你神态安然地站起，高声答题，字正腔圆，将这生涩第一个微分题定义词汇瞬间详解破立，引起全体大班吸气声。`,
-            `【第 ${levelNum} 关 · 教授连环考】张教授老眼一眯，大异：『有点本事，看来真不是不学无术。那下一页论文前言里的这第二个学术硬骨头呢？你接着解！』`,
-            `【第 ${levelNum} 关 · 舍友惊呆】平时总带你逃课网吧开黑的学弱舍友在一旁嘴巴都张老大，惊呆你这个网瘾少年何时成了学魔神尊。你自信一笑，落落大方。`,
-            `【第 ${levelNum} 关 · 讲台留名】你提起白粉笔直接上台，在全校系高材生不可思议的注视下，在黑板上挥洒自如写下后面连环大词的解析。`,
-            `【第 ${levelNum} 关 · 学神加冕】张教授大笔一挥当堂写下满分百分！小晴学姐在台下朝你高举大拇指。你不仅洗清了混日子的冤屈，期末直接保研直升！`
-          ];
-          const prompts = [
-            `顶着全班百人回头的瞩目压力，完美把第一个挡路 Differential 相关的 **${w.word}** (${w.phonetic}) 难题答出：`,
-            `在张教授想要拿起红笔挂科你的那一刻，精准翻译这个 **${w.word}** (${w.phonetic}) 救命主词：`,
-            `读懂小晴学姐在底下贴心勾画的高考 **${w.word}** (${w.phonetic}) 学术标记：`,
-            `像真正直升保研的高才学深般，大声阐释此 **${w.word}** (${w.phonetic}) 核心考点：`,
-            `在张教授惊愕追考的怒容中，解答更生涩好几倍的 **${w.word}** (${w.phonetic}) 高频大词：`,
-            `给旁边吓成呆鸡的逃学舍友露一手神级操作，答中这个 **${w.word}** (${w.phonetic}) 概念：`,
-            `在讲台上落笔如云，展示你针对 **${w.word}** (${w.phonetic}) 的高能笔算：`,
-            `彻底化解张教授的终极微分刁难，干脆利落地把这最后一个 **${w.word}** (${w.phonetic}) 解开：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      case "fantasy_adventure": {
-        if (isBranch) {
-          const intros = [
-            `【奥术支线 · 古神遗迹】在迷失沼泽最深处的世界树废墟前，一尊巨大的石雕巨熊石阵燃起奥数幽火。当你踏出探秘脚步，地表震颤，亮起蔚蓝色光晕符号。`,
-            `【奥术支线 · 符门深锁】遗迹大门上刻满了一列远古大祭司测试凡骨外来者的符印。只要在限时沙漏流乾前辨错，万斤地裂飞石巨槌机关就会被砸下。`,
-            ` =`阿尔法飞在破败雕像上，伸出精致的小魔法杖：『这是世界树下的精灵母语考验。笨蛋，快用你的词储备，否则我们就要被砸成肉泥啦！』`,
-            `【奥术支线 · 破阵点睛】你摒气凝神，双手在光幕前结出金色大法印。当你精准连上第一个远古音节并明晰其含义，雷电大门上的石门随之松落。`,
-            `【奥术支线 · 阵能聚拢】由于解密开始，门柱上的雷光闪射更甚，第二道多维度的错综高能拼音开始高频闪乱。你绝对不容有半点马虎。`,
-            `【奥术支线 · 极限吸能】强大的奥术暴风在废墟中咆哮，阿尔法飞在空中给你加持魔法护目镜。你在风眼狂啸中定睛看穿这些扭曲的魔法字符。`,
-            `【奥术支线 · 晶石回流】你用坚韧不拔的学者毅力，极速写下接连翻译的高能词章。石尊脸上的阴郁煞红慢慢退去，转化为平顺安宁。`,
-            `【奥术支线 · 遗迹全开】轰隆隆！所有祭祀魔法阵彻底化为金碧光流融入你的身躯！石门为你大敞，在这万年废墟中，你成功蜕变为魔能巨学者！`
-          ];
-          const prompts = [
-            `用手按在有热度波动的上古魔石牌上，破译第一个 **${w.word}** (${w.phonetic}) 符文：`,
-            `在大阵开始发烫裂开前，拼读出这个指向巨熊图腾的 **${w.word}** (${w.phonetic}) 外文含义：`,
-            `根据阿尔法拍着翅膀为你指出的 **${w.word}** (${w.phonetic}) 世界树生僻词进行解秘：`,
-            `念诵精灵大言咒中的 **${w.word}** (${w.phonetic}) 以平息四周爆裂的火花：`,
-            `极速点击破解这第二重电链法阵中的 **${w.word}** (${w.phonetic}) 魔法词汇：`,
-            `即使长发被暴风高频卷乱，你也要死死审阅大门上流动的 **${w.word}** (${w.phonetic}) 暗语：`,
-            `点击翻译倒数第export function generateStoryContent(
-  scenarioId: string,
-  levelNum: number,
-  wordList: Word[],
-  isBranch: boolean = false,
-  gender: "男" | "女" = "男"
-): StorySegment[] {
-  const scenario = SCENARIOS.find(s => s.id === scenarioId) || SCENARIOS[0];
-  
-  // Custom roles and pronouns based on gender selection
-  const selfTitle = gender === "男" ? "大少爷" : "大小姐";
-  const partnerPronoun = gender === "男" ? "小师妹" : "师弟";
-  const sonOrDaughter = gender === "男" ? "庶出少爷" : "庶出小姐";
-  const sonOrDaughterChao = gender === "男" ? "乘龙快婿" : "家族继承女千金";
-
-  const items = wordList.map((w, index) => {
-    let intro = "";
-    let choicePrompt = "";
-    const match = WORD_SENTENCES[w.word.toLowerCase()];
-    const enSentence = match ? match.sentence : "";
-    const zhTranslation = match ? match.translation : "";
-    
-    switch (scenarioId) {
-      case "ancient_palace":
-        if (isBranch) {
-          intro = `【大宅支线 · 秘密探秘】你听巧儿悄言说，冷角别院深夜隐隐有异光闪烁。你和巧儿轻手轻脚潜入旧阁，在积满灰尘的双层妆匣后，发现一封尘封已久的陈旧血书。上面歪歪扭扭地写着：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这一惊人细节让你这位 ${sonOrDaughter} 回忆起生母当年的死因，顿觉重重玄机掩盖……`;
-        } else {
-          intro = `【第 ${levelNum} 关：初显锋芒】威严的嫡母坐在金丝楠木椅上盯视着你，旁边的大少爷添油加醋地煽风点火。今天若是这道难题答不出来，便要罚你去克扣三个月例银。你面对众人幸灾乐祸的眼神，不仅没有慌张，反而从容自若地翻开书页，高声朗读并完美释义了这句奥妙英文：<b>"${enSentence}"</b>（意译：${zhTranslation}）。完美无瑕的才华展示让嫡母当场哑口无言！`;
-        }
-        break;
-        
-      case "imperial_court":
-        if (isBranch) {
-          intro = `【御花园支线 · 琴定千秋】月华朦胧，你轻执古琴在太液池畔低诵。高墙树影微动，深受皇上赏识的羽林军统领悄然走至你身后，对你含胸一礼笑道：『娘娘/才人这一句 <b>"${enSentence}"</b>（意译：${zhTranslation}），琴心流露，委实非同凡响。』在这步步杀机的后宫，竟能得遇如此知音，令你感到无限温暖。`;
-        } else {
-          intro = `【第 ${levelNum} 关：御前诗会】皇上今日驾临御花园，全宫秀女御前诗会考核大典开启。不怀好意的丽贵妃向皇上进言让你即兴赋诗献艺。四周秀女都在等着看你出丑。你一袭华美长裙，款款下拜，口中轻吐出的佳作竟是这般妙语惊人：<b>"${enSentence}"</b>（意译：${zhTranslation}）。圣上听毕抚掌大笑，龙颜大悦，连声惊叹你的绝世文采！`;
-        }
-        break;
-        
-      case "modern_city":
-        if (isBranch) {
-          intro = `【魔都支线 · 商务洽谈】周末酒会上，华灯初上，外滩凉风习习。一位身价数亿的外资投行合伙人朝你频频举杯，好奇打听你对科技股战略体系的见解。你整理了一下西装，熟练说出核心推演：<b>"${enSentence}"</b>（意译：${zhTranslation}），侃侃而谈，令对方对你的跨国商务素养叹服不已。`;
-        } else {
-          intro = `【第 ${levelNum} 关：职场巅峰】周一清晨，高冷的Linda总监突然抛下一叠英法双语商业报告要求必须重组提交，否则直接辞退。面对刁难，你顶住压力通宵达旦地在分析报告PPT中写下了最高段位的论述核心：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这无可挑剔的洞察力向全司上下证实了你非凡的专业实力！`;
-        }
-        break;
-        
-      case "college_life":
-        if (isBranch) {
-          intro = `【校园支线 · 迎新风采】校吉他社在操场举办篝火晚会。人气社长将木吉他递前几分：『${selfTitle}，要不要来段即兴Solo点燃全场？』在数十名学弟学妹的热烈欢呼声中，你歌喉轻启，唱出了这首婉转唯美的英文副歌：<b>"${enSentence}"</b>（意译：${zhTranslation}）。篝火旁瞬间爆发出排山倒海的欢呼！`;
-        } else {
-          intro = `【第 ${levelNum} 关：考场对弈】大阶梯教室里，严厉的张教授一指黑板：『倒数第二排开小差的那位，你上来把这道答卷解了！』全班百人目光齐聚你身上。你大步走上讲台，提起粉笔，顺畅无阻地在黑板上书写了例证：<b>"${enSentence}"</b>（意译：${zhTranslation}），并完美得出了答案！引来台下一片震惊与掌声！`;
-        }
-        break;
-        
-      case "fantasy_adventure":
-        if (isBranch) {
-          intro = `【奥术支线 · 古神遗迹】在迷失沼泽深处的世界树残骸前，巨熊石阵燃起奥数幽火。随着你一步踏入，地面瞬间涌现出散发着蓝色极光的古代英文神谕：<b>"${enSentence}"</b>（意译：${zhTranslation}）。你微闭双目感应着天地间元素的流动，开始有条不紊地聚拢吸纳这股浩瀚奥能……`;
-        } else {
-          intro = `【第 ${levelNum} 关：禁咒吟唱】你高擎着魔导书挡住地精骑兵。领队的黑魔法狂徒嘲讽你不过是个凡人。危急关头，阿卡多金钥将神圣的高阶吟唱古语映入你脑海：<b>"${enSentence}"</b>（意译：${zhTranslation}）。你当即释放体内极限法力高声颂出，一道遮日御天、不可动摇的黄金守护符文盾瞬间拔地而起！`;
-        }
-        break;
-        
-      case "showbiz_superstar":
-        if (isBranch) {
-          intro = `【巨星支线 · 整蛊突袭】在下榻酒店里，半夜突袭整蛊节目的摄像机推门而入。在猝不及防、纯素颜未饰的闪光灯聚焦下，你沉着应对。你面向镜头展现出不可思议的高情商风度，并大方流利地说道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。优雅的表现不仅成功破梗，更收割了一波路人粉！`;
-        } else {
-          intro = `【第 ${levelNum} 关：剧组狂飙】《至尊风云》摄影棚里，欺负新人的副导演故意晾了你三小时，百般嘲弄。沈姐冷静地塞给你一页临时修改的重头戏台词。你大步走入镜头，眼神一瞬含泪，演技轰然爆发，用无解的台词功力悲壮吐出一联：<b>"${enSentence}"</b>（意译：${zhTranslation}）。全剧组顿时起立拍案称绝，副导演脸上青红交替！`;
-        }
-        break;
-        
-      case "husband_rebound":
-        if (isBranch) {
-          intro = `【神豪支线 · 拍卖会反爆】珠宝拍卖会上，势利大姑子百般嘲笑你是买不起赠品的穷叫花，正得意时，大管家拍手奉上了全球尊贵黑金卡与千亿代理合同。在一众名流屏息瞩目下，你神定气闲，扬眉吐出一串流利的质问：<b>"${enSentence}"</b>（意译：${zhTranslation}）。锋芒瞬间反噬全座，大姑子吓得当场脸白！`;
-        } else {
-          intro = `【第 ${levelNum} 关：赘婿/赘媳扬眉吐气】丈母娘过寿，你奉上贺礼，却被刻薄的大姑嘲笑为丢人现眼的地摊货。众人蜂拥附和。正当羞辱爆发，门被隆重撞开，十辆迈巴赫一字排开，首富管家领着百名西装保镖齐齐跪迎：『恭迎${gender === "男" ? "姑爷" : "少夫人"}回归！』你缓缓整理风衣，居高临下地朝林家上下冷声道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。一朝爆发，林家上下当场吓得瘫跪在地！`;
-        }
-        break;
-        
-      case "wuxia_jianghu":
-        if (isBranch) {
-          intro = `【江湖支线 · 临仙幽篁】你与${partnerPronoun}在清幽竹林间运功。反派死对头带四大罗汉突袭。${partnerPronoun}咬牙飞身挡在你身前：『剑谱有云：<b>"${enSentence}"</b>（意译：${zhTranslation}）。师兄妹并肩齐上，绝不容邪魔外道小瞧了我等！』`;
-        } else {
-          intro = `【第 ${levelNum} 关：正邪对决】华山险隘，寒风刺骨，叛徒领暗器如雨破空而来。千钧一发之际，你回想起师祖的无上遗训，将平生功力在一瞬灌注到长剑之上，剑气激扬间吐气高声道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。一剑东来，气贯长虹，直取对方致命死穴，杀局瞬间被荡尽！`;
-        }
-        break;
-        
-      case "mall_empire":
-        if (isBranch) {
-          intro = `【商场支线 · 品牌大招商】招商沙龙上，国际一线轻奢大牌总裁态度不冷不热，林助理提醒你对方的痛点。你神情自若，指点沙盘，用完美的商业手笔流畅地总结道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这无懈可击的前瞻性战略架构，令高傲的亚太区总裁当场叹服！`;
-        } else {
-          intro = `【第 ${levelNum} 关：破产逆袭战】逆水行舟，你临危接班废墟商场。在行业听证会兼对赌大会上，前任采购内鬼带人恶意起哄逼迫你下课。你冷笑上前，打开超大投影显示了你精密的整顿分析，并慷慨解言：<b>"${enSentence}"</b>（意译：${zhTranslation}）。震聋发聩的数据穿透了对手编造的谎言，全场起立喝彩！`;
-        }
-        break;
-        
-      case "detective_deduction":
-        if (isBranch) {
-          intro = `【侦探支线 · 窗台密信】深夜贝克街，迷雾缭绕。一只白羽雪枭敲窗，腿上扣着苏格兰场的精密铜扣锁，里头赫然藏着半张未损烧焦、极富条理的密信纸条：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这行致命线索，为解开庄园悬案提供了至关重要的拼图。`;
-        } else {
-          intro = `【第 ${levelNum} 关：破案如洗】古老庄园的密闭大厅内，男爵拍桌大骂你中伤名流。你慢条斯理地解开厚重大衣，将从挂钟夹缝里搜出的陈旧纸条拍在桌案：『男爵，那你如何解释当时死者手写记录下的这条惊天线索：<b>"${enSentence}"</b>（意译：${zhTranslation}）！』罪名昭彰，男爵浑身剧烈颤抖，彻底认罪！`;
-        }
-        break;
-        
-      default:
-        if (isBranch) {
-          intro = `【修道支线】时空星轨中闪烁着金色奥妙能量。你循着指示，参破了能量柱上镌刻着的千载古语：<b>"${enSentence}"</b>（意译：${zhTranslation}）。你体悟非凡，顺利走完了这段修行支路！`;
-        } else {
-          intro = `【第 ${levelNum} 关：境界考验】在无边无际的求学历程中，星光结界再次从云雾端降落，阻拦你前行。你注视着悬浮于虚空中的神圣英文古句，其言曰：<b>"${enSentence}"</b>（意译：${zhTranslation}）。参透其中的核心词眼即可破阵前行。`;
-        }
-        break;
-    }
-
-    choicePrompt = `请结合以上语段情境与大义，选择学修核心词【${w.word}】的正确简体中文释义：`;
-
-    return {
-      intro,
-      wordInContext: w.word,
-      choicePrompt,
-      climaxTitle: `💥 终极决斗：正面突围！`,
-      climaxIntro: `危机时刻降临！你与本关卡的棘手宿敌面对面正面遭遇，他们正发动不择手段的盘问。你必须在完全随机的单词问答连胜中连克数关（将刚刚学到的单词全部一网打尽并答对），才能挫败对方，解围翻盘并赢取丰盛战利品！`,
-      rewardIntro: `恭喜！在${scenario.companionName}由衷的夸赞中，你不仅打脸了反派，还让所有人对你刮目相看！你成功赢取了大量「${scenario.currencyName}」！商店的道具和物资已经全新到货，快去补充助战自定制道具或乘胜追击进入下一关！`,
-      opponentName: getOpponentName(scenarioId, levelNum)
-    };
-  });
-
-  return items;
-}有金像影后级的英文台词爆裂输出，震惊全剧组。`,
-            `【第 ${levelNum} 关 · 导演冷汗】副导演老脸大变、惊起直拍桌子：『这人物深度，这拗口台本！那紧接着的第二句写意内心戏的生难词，你又怎么接？』`,
-            ` =`你用精绝的微表情，一颦一笑一眨眼将最顶难度的剧本原原本本、毫无错漏台词演绎，用震撼张力和情绪让看低你的人哑口无言。`,
-            `【第 ${levelNum} 关 · 顶流折服】刚才还神气十足、打算在台下刺探你洋洋失仪的戏霸傻了眼。在沈姐极其爽爆的掌声中，全场群演激动沸腾起哄。`,
-            `【第 ${levelNum} 关 · 夺回大位】你成功一气呵成将整段最高难度大词大本完满演完！所有人顶礼膜拜！你不仅夺回了无可代替的主角大位，名气直干云端！`
-          ];
-          const prompts = [
-            `为了让欺负新人的副导演大惊失色，在出场一幕展现极具张力的 **${w.word}** (${w.phonetic}) 演技：`,
-            `以一记震裂耳膜般的顶级发声，干脆利落地把这个极难 **${w.word}** (${w.phonetic}) 独白词词唱对：`,
-            `接过沈姐给你底牌的戏本，精准翻译这个体现奢华背景的 **${w.word}** (${w.phonetic})：`,
-            `完全带入角色的深切痛感，精妙绝伦阐释这个高端 **${w.word}** (${w.phonetic}) 核心用语：`,
-            `在副导演一连惊愕抹汗的注视中，迎难而上翻译极难的 **${w.word}** (${w.phonetic}) 动作提示词：`,
-            `给台下等看你戏卡戏的关系户戏精们重重一击，答中这只 **${w.word}** (${w.phonetic})：`,
-            `用无缝融入你台词的知性美，说出下面 **${w.word}** (${w.phonetic}) 的高情商翻译含义：`,
-            `完成了最后那一吻剧本里的完美英文升华，破出此压台大词 **${w.word}** (${w.phonetic})：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      case "husband_rebound": {
-        if (isBranch) {
-          const intros = [
-            `【神豪支线 · 拍卖反爆】在顶层超奢私人珠宝拍卖会上，嫌你囊中羞涩的百亿大姑子冷笑连连，说你这个乡巴佬连牌子上法美中世纪外文都看不懂。`,
-            `【神豪支线 · 假画陷阱】大姑子联合拍卖行大主管，推举上一幅古代西洋名画，宣称绝对是价值连城的传国画。实际正要用仿作狠狠把你当猴子坑骗。`,
-            `【神豪支线 · 王叔奉信】大管家王叔西服笔挺、带着随从退至你身后：『少爷，老爷早已把海外顶家评估报告取来。此画字词藏有一桩大诡计。』`,
-            `【神豪支线 · 指纸定乾坤】你双目大雷电、傲气上前，在千万镜头下一把拿过油画。当你完美翻译出右下角代表临摹的特定秘密洋字，阴谋当场破产！`,
-            `【神豪支线 · 行商总裁面红】在场富商和行总裁当真倒吸一口凉气。大姑子吓得老脸粉碎，手里的拉菲香槟当场摔个砸烂，整个人战慄发抖。`,
-            `【神豪支线 · 绝招全开】大姐还在尖声挣扎：『不过是一只单词认对罢了，台下的名牌国宝你倒是指出来它们的真正评估洋文啊！』。你缓缓冷笑。`,
-            `【神豪支线 · 全资横扫】你在一张张天价古玩的底单合同上勾画评判，把它们极高难度的番文标注字词解得极度详细，行会总会长佩服跪地。`,
-            `【神豪支线 · 巨富加冕】你完美干掉所有拍卖会大刁难！王叔高高甩出黑金卡：『少爷大手笔，拍卖行全部九件真迹我们通货打包，当场付清！』`
-          ];
-          const prompts = [
-            `端着名贵红茶，你要用高深的外语修养大破大姑子大姐夫设下的 **${w.word}** (${w.phonetic}) 圈套：`,
-            `精准反手戳破仿作国宝背后的狡诈 **${w.word}** (${w.phonetic}) 外文暗记：`,
-            `按照大管家王叔为你连线递上的底商高密，秒杀此中高端 **${w.word}** (${w.phonetic}) 评星词：`,
-            `在行总裁大姑子冷白的大老脸上，狠狠给出这精准的 **${w.word}** (${w.phonetic}) 回击：`,
-            `反克大姑子尖酸的追骂发难，解密下一组生僻骨董合同上的 **${w.word}** (${w.phonetic})：`,
-            `像一名深不可测、手拉跨国财阀的至尊神豪，答对此处 **${w.word}** (${w.phonetic}) 的价格含义：`,
-            `在一众金高富们极其自取其辱的目光中，优雅挑出 **${w.word}** (${w.phonetic}) 的核心真假破绽：`,
-            `在拍卖锤重重敲落的同时，全款买单并完美吐出此 **${w.word}** (${w.phonetic}) 的霸气内含：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        } else {
-          const intros = [
-            `【第 ${levelNum} 关 · 赘婿扬眉】丈母娘举办六十奢华寿宴。你刚推门送上手工贺礼，刁蛮的大姐夫就尖声讥评：『拿着这英文台写错的十块地摊货也好意思上桌？丢尽林家大脸！』`,
-            `【第 ${levelNum} 关 · 驱逐危局】林家上下十几口群起对你极尽数落奚落，丈母娘抓龙凤拐直拍地砖，喝下要你滚出去扫马桶：『连贺贴上的英法词汇都答错，退下！』`,
-            `【第 ${levelNum} 关 · 首富临门】话音剛落，别墅大门轰然被雷霆撞碎！几十辆迈巴赫停满山庄，豪门王管家率一列黑墨镜黑衣保镖铺满大厅，当众重重给你跪了一地！`,
-            `【第 ${levelNum} 关 · 恭请少爷】王叔红眼眶长叹高呼：『恭请${gender === "男" ? "姑爷" : "少夫人"}掌权！跨国财阀兼并对数天期考核您已完美毕业！千亿林氏现在任您赏罚！』你缓缓迈开脚。`,
-            `【第 ${levelNum} 关 · 林家震爆】刚还凶悍嚣张的大小姐丈母娘当场吓得扑通倒在椅子上，老眼翻白。王管家呈上财权合同：『少爷，请您先对单这几个生难跨国条例！』`,
-            `【第 ${levelNum} 关 · 财务斩流】丈母娘吓得拼命赔笑认奴。你负手端凝，在对数大账合同上，一秒速决出了第一个对数外文大项漏，当众废免其百万行金。`,
-            ` =`刁蛮大姐夫在一边抖得不成人样，王管家给你端上天价红茶。你长笔划过天命生词，给与其最疯狂、最彻头彻尾的智力和实力双重碾压。`,
-            `【第 ${levelNum} 关 · 豪吞万亿】你完美签署翻译完了整个兼并财团的所有生难英文条例！王叔大喝废除林氏这边的全部资产借贷信托，大姐夫当场痛哭连跪求饶！`
-          ];
-          const prompts = [
-            `在林家上下百人准备将你撕碎轰出的瞬间，展现精奥的 **${w.word}** (${w.phonetic}) 外语贺词：`,
-            `重重打脸林家大姐夫的不学无术，辨出贺帖上的 **${w.word}** (${w.phonetic})：`,
-            `在一列黑衣保镖跪下、林家全员骇然中，气定神闲解出此 **${w.word}** (${w.phonetic}) 大契约：`,
-            `在丈母娘抖得合不上嘴巴的呆呆见证下，傲迈回答这个 **${w.word}** (${w.phonetic}) 条款含义：`,
-            `面对企图抵赖贷款的亲戚高管，解读合并章程里的 **${w.word}** (${w.phonetic}) 核心限制：`,
-            `无漏发现对方在外汇进账上玩弄的心眼，揭去此 **${w.word}** (${w.phonetic}) 欺诈迷雾：`,
-            `给已经瘫得提不来鞋的林大少大姐夫痛击，选准这只 **${w.word}** (${w.phonetic}) 的高能译解：`,
-            `在王管家高呼“少爷千亿封顶”的震撼余威中，裁夺这最后一个 **${w.word}** (${w.phonetic}) 条理：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      case "wuxia_jianghu": {
-        if (isBranch) {
-          const intros = [
-            `【江湖支线 · 临仙幽篁】你与婉儿在幽静幽篁竹林中心推揉招式。突然，昆仑派大奸少带着手下悍徒设下死困伏击：『交出师门太极残卷！』`,
-            `【江湖支线 · 铁阵笼罩】悍徒各持铁禅杖，布下极其高频率音震的万古合围凶阵，大阵念词犹如万叶穿耳，企图将你真气彻底逼爆断流。`,
-            `【江湖支线 · 师妹密语】婉儿轻功掠上竹梢，白衣胜雪，急声提点你：『大师兄/师姐别怕，这一伏魔阵乃是外域行者传过来的，咱们只要背其古英文破绽秘辛。』`,
-            `【江湖支线 · 重出九阳】你神融识海，九阳真罡在体内极速大周游。剑尖刺破微风，第一道带有金钟罩破相的英文大咒被你当堂破去。`,
-            `【江湖支线 · 凌波大避】悍武僧人怒不可遏，倒提玄铁杖卷起千重碎地沙土恶狠狠砸下。你踏着凌波微步在错综飞沙中速记着词诀。`,
-            `【江湖支线 · 气流呼啸】竹叶飘摇狂啸。你与婉儿在碎裂半空相互借步，长剑嗡嗡共鸣，在令人极其心浮目躁的梵音中搜寻阵法大命门。`,
-            `【江湖支线 · 铁棍飞天】你连出惊神极速重指，剑芒过处，大阵里倒数第二尊大护法的穴位被你的单词重招戳了个正破，铜棍撒手飞天。`,
-            `【江湖支线 · 踏浪江湖】你完成了伏魔经文所有生难词的古籍意译释意！四大奸派罗汉捂着胸口狼狈遁走。婉儿美目流盼赞叹：『师兄/姐神乎其技！』`
-          ];
-          const prompts = [
-            `拔剑当关，运起真罡破掉伏魔音震中第一个夺魄 **${w.word}** (${w.phonetic}) 密记：`,
-            `在大阵死锁、凶险极寒的那一息内，一招破去这个封穴 **${w.word}** (${w.phonetic})：`,
-            `配合婉儿飞出的白绫，默诵翻译这只指向大阵底力的 **${w.word}** (${w.phonetic})：`,
-            `一记惊神一气点出对方剑谱的致命 **${w.word}** (${w.phonetic}) 漏洞：`,
-            `闪开大和沿地而砸的铁手重招，速选此 **${w.word}** (${w.phonetic}) 精微释疑：`,
-            `在飞沙走石的狂压暴澜下，死死凝视对方棍法破招处的 **${w.word}** (${w.phonetic})：`,
-            `为了帮助婉儿在空中摆脱恶虎扑羊攻势，刺破倒数第二大 **${w.word}** (${w.phonetic})：`,
-            `用无缝相融的无相心典解密此梵大偈的最后一个 **${w.word}** (${w.phonetic})：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        } else {
-          const intros = [
-            `【第 ${levelNum} 关 · 华山决胜】险隘华山，风刀霜割。背叛师门的恶徒老怪恶贯满盈地狂笑着飞身拦路：『今天便拿你这名门新秀的项上人头，来献祭我的邪功！』`,
-            `【第 ${levelNum} 关 · 漫天毒刺】恶怪长袖一拂，大批带着幽绿冥火的密麻暗器朝你当头笼罩。你手中重剑不慎脱落，生死悬在一发。`,
-            `【第 ${levelNum} 关 · 师妹援军】婉儿美目圆睁，娇喝一声大红色剑穗一横，飞身立在你的近前阻拦：『大师兄/师姐跟着我的师门意境口诀！双剑出鞘！』`,
-            `【第 ${levelNum} 关 · 剑指昆仑】你豪情万般大涨！按着婉儿背诵的英文心诀精义出指，流光剑影荡开全部毒光毒暗器，让恶怪大异退步。`,
-            `【第 ${levelNum} 关 · 邪魔爆发】老怪急火烧心狂啸，吐出大汪本命血雾，化作极其凶暴的暗红大手掌凌空拍落，巨石炸开，逼入绝境。`,
-            `【第 ${levelNum} 关 · 祖传真法】婉儿咳着娇红嘴角，却长剑高扬、给你指教当年掌门的临别密卷：『大意而不化于形！快用英文高级剑谱意指！』`,
-            `【第 ${levelNum} 关 · 剑意点穴】你意沉丹田。你依靠连续选对的生辟剑招秘诀，在对方大掌印崩山坠地的致命死穴内，接连刺中隐藏的契约英文词孔。`,
-            `【第 ${levelNum} 关 · 云散月明】你完全翻译御动了华山剑谱的所有飞仙单词！老怪怪叫跌落深崖。婉儿扶着你的重剑喘气笑道：『太厉害啦师兄/姐！』`
-          ];
-          const prompts = [
-            `用惊世的凌空折梅轻功避开恶徒掌风，吐出第一个破功的 **${w.word}** (${w.phonetic}) 字诀：`,
-            `在毒刃破喉逼近的万钧刹那，一式太极两仪剑解出这个 **${w.word}** (${w.phonetic})：`,
-            `借着婉儿白衣护法的间隙，拼读破除老怪周身血雾大盾的 **${w.word}** (${w.phonetic})：`,
-            `像一名青衫白马的绝顶大侠，高声喝出太极剑歌意指的 **${w.word}** (${w.phonetic})：`,
-            `绝境逆起，反守为攻化解老怪修罗魔掌的 **${w.word}** (${w.phonetic}) 破口：`,
-            `在飞沙走石的恐怖内劲大网中，精确指明此中 **${w.word}** (${w.phonetic}) 剑诀：`,
-            `一剑当空，带给恶少爷最致命的武学降维大一击，解出 **${w.word}** (${w.phonetic})：`,
-            `荡平漫天黑雾邪魔，解锁最后一个重振师门大威威的名牌 **${w.word}** (${w.phonetic})：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      case "mall_empire": {
-        if (isBranch) {
-          const intros = [
-            `【商场支线 · 奢牌招商】知名跨国轻奢总会沙龙上，国际一线路边香奢大牌的亚太区总裁对你的谈判不冷不热，高傲地喝红酒，嫌弃你的招商面积。`,
-            `【商场支线 · 总裁施压】大总直接抛出一卷英文时尚及企业重重估值合一的大账大案：『小总监，除非你能当堂剖明并翻译此合同词彙。』`,
-            `【商场支线 · 助理密信】精干的林秘书手疾，在一旁连夜找出该奢侈大佬的采购底单：『林总，这就是她的命门估价！』你心里一亮。`,
-            `【商场支线 · 美语交谈】你站起身，在商界万众环绕下，熟练运用所学大牌英文行话。当你完美将第一个特有词背后的品牌灵魂详解，女总大惊。`,
-            `【商场支线 · 气提盈利】亚太总裁大叹：『好！但这第二个高定的复合估价细节核心大词，你可有什么惊人的商业点子去保我盈余？』`,
-            `【商场支线 · 酒会全焦】全场奢侈商会会长纷纷侧目震惊倒退。你负手立在沙盘侧，气吞万里长城，谈吐如天外流仙商霸，自信破立。`,
-            `【商场支线 · 林助笑意】林秘书在一侧将早已准备的高定专属首店长约大合同推了过去。对方的估算防线在你的单词解答前已经全面土崩瓦解。`,
-            `【商场支线 · 独家首店】对赌中奢侈品最难解的外商大单词被你统统攻破！女总微笑着抓起烫金金笔写长单！亚太区独家首秀在你的商场彻底爆落！`
-          ];
-          const prompts = [
-            `用从容不迫的金融口才去解答傲慢大总裁抛出的 **${w.word}** (${w.phonetic}) 估量大词：`,
-            `瞬间识破大牌总裁故意摆下的价格漏洞，点出真谛 **${w.word}** (${w.phonetic})：`,
-            `根据全能林助理递上的后台资产外单，默诵破译关键的 **${w.word}** (${w.phonetic})：`,
-            `像真正的商业财阀之女/之子，优雅将对此 **${w.word}** (${w.phonetic}) 的高见大声说出：`,
-            `回击其对于客流量不够的挑剔刁难，阐述品牌大高定 **${w.word}** (${w.phonetic}) 的大价值：`,
-            `在沙龙各大名流巨富的倒吸凉气中，流畅说明本词 **${w.word}** (${w.phonetic}) 的采购含义：`,
-            `给这个慕强的奢侈总露一手底蕴，完成对 **${w.word}** (${w.phonetic}) 的高级评估：`,
-            `以绝对胜券在握的高姿态破译最后一个 **${w.word}** (${w.phonetic}) 合同大重点词义：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        } else {
-          const intros = [
-            `【第 ${levelNum} 关 · 对赌听证】濒临破产的全新购物商场开幕大听证。贪污公司财务、吃里扒外的前采购采购采购采购内鬼聚众指责发难：『年轻人趁早滚蛋，你懂个屁！』`,
-            `【第 ${levelNum} 关 · 账本死锁】采购内鬼甩出一卡大洋酒、洋化妆品进口高难外文账本，气极败坏：『有本事就把这第一个词翻译！解不出当堂下台！』`,
-            `【第 ${levelNum} 关 · 助理到场】林助理穿着干练裙装推门迈回，将查核底细的内鬼账本底牌稳重呈上：『高总，这是他们做假贪金的账目。』`,
-            `【第 ${levelNum} 关 · 反手大翻】你气定闲神一扫，当堂把内鬼玩弄假虚账本中的第一个要命大漏、漏词完美解读并公之于众，内鬼脸色瞬间煞白。`,
-            `【第 ${levelNum} 关 · 分管怒极】竞争大公司的分管常务冷怒上前，又狠狠拍出一叠复杂的物流供应链大保密合约：『那这这第二个行行话，又是何意？』`,
-            `【第 ${levelNum} 关 · 指沙点局】你在全场董事和分管震惊目光下负手帅气站姿，英姿勃发，在巨屏供应链投影前，把复杂的进口词解得一清二楚。`,
-            `【第 ${levelNum} 关 · 常务抹汗】在林助理满带赞誉的崇拜美目注视中，你在大板白纸上流畅写下随后一列高级商业单词的解答。对方哑口无语。`,
-            `【第 ${levelNum} 关 · 总裁之王】你全胜解答完了整个分和跨国兼并采购案大链条上的所有英文！内鬼当场被保安送去经侦查办，大商场盈利金冲爆对赌顶！`
-          ];
-          const prompts = [
-            `迎着贪污内鬼指着你大不敬大老脸，解答第一个大牌大采购里的 **${w.word}** (${w.phonetic}) 合约大大难词：`,
-            `戳穿采购内鬼在账面上做手脚的虚荣诡计，认命 **${w.word}** (${w.phonetic})：`,
-            `借助助理连夜追查的财务大漏洞，将此关键 **${w.word}** (${w.phonetic}) 一笔指出：`,
-            `大声宣布你对这个高频跨国采购 **${w.word}** (${w.phonetic}) 条款的最佳意释：`,
-            `接招分管常务恶意的后续大供应链盘问，解释生难的 **${w.word}** (${w.phonetic}) 会计核心：`,
-            `在投影巨幕前落落大方，秒答这一组财务物流相关的 **${w.word}** (${w.phonetic})：`,
-            `为了彻底让内鬼这边的分管常务低头，完成这只 **${w.word}** (${w.phonetic}) 商业释解：`,
-            `将三十万作假大账大单完璧破解，点准这最后一个大核心 **${w.word}** (${w.phonetic}) 条例：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      case "detective_deduction": {
-        if (isBranch) {
-          const intros = [
-            `【侦探支线 · 窗台飞鸽】大雾漫天贝克街深夜。一尊白雕雪枭轻轻叩响你的复古雕窗，其脚环上用火漆印着苏格兰皇家特统处的龙卷密码铜器。`,
-            `【侦探支线 · 药水炸弹】取出信里面是一卡泛黄的、英法复合错乱暗密纸，只要在几秒内辨识出错，其其背后的特制剧毒硝酸引线就会爆燃。`,
-            `【侦探支线 · 华生研茶】华生在身旁为你端来热姜茶和精密高频放大镜，极其知心：『这绝对是江洋怪盗莫里亚蒂暗中发出的挑逗密信，别慌。』`,
-            `【侦探支线 · 手起剪落】你聚气开眼，双目在发霉发暗泛黄的字卡上一扫。当你精确解答第一个高频暗密词，铜栓传来卡嚓卡哒闭闭合。`,
-            `【侦探支线 · 密卷蒸发】字卷上的隐形高能酸慢慢随气流挥发，露出了藏藏在更深入暗夹里的另一阶段更高智字卡。你大笔连点不能停歇。`,
-            `【侦探支线 · 窗外哨子】大雾深处传来了黑衣走狗警哨的大大响动。你在油灯火高频跳动闪烁中提炼出这些颠倒英文字母的逻辑真源含义。`,
-            `【侦探支线 · 迷局得绿】华生默默挡在一侧防范飞箭。倒数第二枚密码锁印在你的坚定学识解密码之下传来安全好卡的微弱变绿，退毁引线。`,
-            `【侦探支线 · 密件大图】你完全大破了全套莫里亚蒂江洋大字大码！纸上缓缓呈现了皇家博物馆丢失的百亿女王大金挂冠藏匿的绝密坟冢图！一战惊神！`
-          ];
-          const prompts = [
-            `利用高精度的放大镜在发霉暗色上，大眼解密莫里亚蒂的第一个 **${w.word}** (${w.phonetic}) 挑衅：`,
-            `在硝酸自毁炸弹爆裂大滴答大计时下，火速点出救命一词 **${w.word}** (${w.phonetic}) 的大含义：`,
-            `在华生的贴心掩护和红姜茶温润提力下，解码高危 **${w.word}** (${w.phonetic}) 暗语：`,
-            `像名震伦敦的无双侦探，冷笑大声指出字条里的 **${w.word}** (${w.phonetic}) 隐秘死角：`,
-            `辨出水汽底面隐约折射出的第二个高频名探 **${w.word}** (${w.phonetic}) 密码：`,
-            `克服窗外特警处走狗和黑衣人的暗枪威胁，解出此 **${w.word}** (${w.phonetic}) 隐藏词：`,
-            `在放大镜的最底层，点中这个指向核心藏尸案发地的 **${w.word}** (${w.phonetic}) 字母：`,
-            `完全拔除自毁倒计时引线，解答这封至大密信上的最后一个 **${w.word}** (${w.phonetic})：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        } else {
-          const intros = [
-            `【第 ${levelNum} 关 · 伦敦迷雾】古老封闭的庄园大厅里。傲慢无礼、嫌疑极大的男爵脸色阴鸷，用戴着金宝石戒的手猛拍大理石桌子：『侦探，诽谤！把这家伙丢进河里！！』`,
-            `【第 ${levelNum} 关 · 保镖进逼】主长随、黑衣保镖和管家死死攥着沉重的铜手杖向你缓缓合围逼上。要是无法在洋遗书账单里找破绽，你便死在这雪地庄。`,
-            `【第 ${levelNum} 关 · 华生提点】忠义搭档华生咬着烟斗，冷静用红皮鞋后跟指了下大红波斯地毯底缝夹层的染血银十字架钥匙：『侦探！遗嘱的墨迹是反的！』`,
-            `【第 ${levelNum} 关 · 一针见破】你金眼如电！一秒内大声翻译并直指遗书上最能破证其时间写错的第一个大漏洞生字，证明其大伪造，引得百座保镖皆惊！`,
-            `【第 ${levelNum} 关 · 凶器突起】男爵面部发狂红！偷偷在长毛大毛衣里，摸出一只涂了 deleterious 绝毒药的黄金毒暗针：『你算什么东西！那那这几张西番行贾契约，你倒是指啊！』`,
-            `【第 ${levelNum} 关 · 烟雾掩护】华生上前挡住！大叫：『别慌！快查他身上的信函单！』你在令人窒息的一息内定神分析，开始极速拆解这连环洋契。`,
-            `【第 ${levelNum} 关 · 伏案辩解】男爵急得脸上粉末大掉、拼命想在董事局前辩说。你连连出词反刺，将其行贿勾结洋商通谋侵全家财的大漏说得水落石下。`,
-            ` =`你解破完了全套犯罪所有的通鬼外语契词大谜！原来男爵正是为了吞吃大钻石而毒手下药害害死大爵爷！男爵崩溃被苏格兰特警死死扣链逮捕，勋勋狂耀！`
-          ];
-          const prompts = [
-            `用鹰眼般犀利的名家破案神色，指出庄园男爵伪造的第一个 **${w.word}** (${w.phonetic}) 涉案遗嘱词：`,
-            `在大管家和黑衣保镖准备一拥而上掐断你喉咙瞬间，秒杀这个 **${w.word}** (${w.phonetic}) 学術词：`,
-            `结合华生为您在波斯地毯缝指出的致命猫腻，破解关键 **${w.word}** (${w.phonetic})：`,
-            `大声念出死者临终绝笔信中最颠倒是非的 **${w.word}** (${w.phonetic}) 词彙解释：`,
-            `反击男爵面部神经发狂扭曲的抵赖，解读洋通商契里的 **${w.word}** (${w.phonetic}) 核心代号：`,
-            `在庄园董事百名高层围看下，一气呵成翻译下一组带有暗款的 **${w.word}** (${w.phonetic})：`,
-            `将男爵在伦敦黑市私自购毒下药的大罪证字卡一网打尽，选对这个 **${w.word}** (${w.phonetic})：`,
-            `向全场伦敦特警探长大声宣告此项案中核心指控大词 **${w.word}** (${w.phonetic}) 的大正确含义：`
-          ];
-          intro = intros[beatIndex % intros.length];
-          choicePrompt = prompts[beatIndex % prompts.length];
-        }
-        break;
-      }
-        
-      default: {
-        intro = `【第 ${levelNum} 关 · 第 ${beatIndex + 1} 步：境界考验】在无底深渊的探索征途中，星空魔网的第 ${beatIndex + 1} 尊光印在此挡下。只要通破此字，便能重获自由。这个单词正在考验您的智慧底力。`;
-        choicePrompt = `为了能够通过大关卡，请选出并破译 **${w.word}** (${w.phonetic}) 的含义：`;
-        break;
-      }
-    }
-
-    return {
-      intro,
-      wordInContext: w.word,
-      choicePrompt,
-      climaxTitle: `💥 终极决斗：正面突围！`,
-      climaxIntro: `危机时刻降临！你与本关卡的棘手宿敌面对面正面遭遇，他们正发动不择手段的盘问。你必须在完全随机的单词问答连胜中连克数关（将刚刚学到的单词全部一网打尽并答对），才能挫败对方，解围翻盘并赢取丰盛战利品！`,
-      rewardIntro: `恭喜！在${scenario.companionName}由衷的夸赞中，你不仅打脸了反派，还让所有人对你刮目相看！你成功赢取了大量「${scenario.currencyName}」！商店的道具和物资已经全新到货，快去补充助战自定制道具或乘胜追击进入下一关！`,
-      opponentName: getOpponentName(scenarioId, levelNum)
-    };
-  });
-
-  return items;
-} are juxtaposed in the high-society literature described in the text?",
-      options: [
-        "Valiant warriors fighting for legendary imperial coins and silent peasants",
-        "Loquacious, obsequious flatterers versus recalcitrant, anti-sycophant intellectuals",
-        "Fastidious scientists research thermal biodiversity versus negligent politicians",
-        "Imperturbable old detectives and xenophile invaders"
-      ],
-      correctAnswerIndex: 1,
-      explanation: "定位原文第一句，作者探讨了一种奇特的并置：一方面是喋喋不休、谄媚虚伪的奉迎者，另一方面是反叛的、鄙视拍马屁行为的知识分子。选第2项。"
-    },
-    {
-      id: "tem8_exam_2",
-      type: "listening",
-      year: "2024年3月英语专业八级听力 Part I Mini-Lecture",
-      source: "英语专八全真特训教材",
-      passage: "W: Welcome to this week's discussion on literary philosophy. Today, let's explore why Victorian novels frequently portray nefarious villains who eventually acquiesce to moral laws.\nM: Yes, the Victorian mindset found comfort in moral triumph. Writers created enervate heroes who, despite their fastidious etiquette, were initially overwhelmed by bellicose villains, but the villain's ultimate downfall provided a comforting, magnanimous ending where righteousness prevailed.",
-      dialogue: "A deep academic symposium investigating the structural resolution of nefarious characters in late 19th-century prose.",
-      question: "According to the speaker, why did Victorian writers frequently portray such moral resolutions?",
-      options: [
-        "Because readers suffered from intense xenophobia after foreign trade expansions.",
-        "Because Victorian culture found psychological comfort and vindication in the ultimate triumph of moral righteousness.",
-        "Because publishers parsimoniously refused to print multi-volume tragedies.",
-        "Because the chaotic cacophony of the industrial revolution made people deaf to silent stories."
-      ],
-      correctAnswerIndex: 1,
-      explanation: "男士说明：'Yes, the Victorian mindset found comfort in moral triumph... righteousness prevailed'。暗示了维多利亚文化在道德正义战胜邪恶的心理圆满中找到借口与宽慰，选第2项。"
-    }
-  ]
-};
-CORRUPT_JUNK_END */
-
-// Generates levels dynamically per word book.
-// Includes user selected gender (男 or 女) to dynamically adapt the stories
-export interface StorySegment {
-  intro: string;
-  wordInContext: string; // The English word
-  choicePrompt: string; // inline situation
-  climaxTitle: string; // Duel title
-  climaxIntro: string; // Duel narrative
-  rewardIntro: string; // Reward narrative
-  opponentName: string; // Enemy name
-}
-
+// Generates immersive hybrid sentences seamlessly replacing target meanings
 export function getHybridSentence(w: Word, translation: string): string {
   if (!translation) return "";
-  const word = w.word; // e.g. "confused"
-  const meaning = w.meaning; // e.g. "困惑的，糊涂的"
-  
-  // Potential terms to replace in translation
-  // Split meaning by common punctuation to find possible translation synonyms
+  const word = w.word;
+  const meaning = w.meaning;
   const parts = meaning.split(/[，,、；;()（）]/).map(p => p.trim()).filter(Boolean);
   const searchTermsSet = new Set<string>();
   
   for (const part of parts) {
     searchTermsSet.add(part);
-    
-    // strip suffixes like '的', '地', '得', '了'
-    if (part.endsWith("的") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    if (part.endsWith("地") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    if (part.endsWith("得") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    if (part.endsWith("了") && part.length > 1) {
-      searchTermsSet.add(part.slice(0, -1));
-    }
-    
-    // strip prefixes like '使', '被', '让'
-    if (part.startsWith("使") && part.length > 1) {
-      searchTermsSet.add(part.slice(1));
-    }
-    if (part.startsWith("被") && part.length > 1) {
-      searchTermsSet.add(part.slice(1));
-    }
-    if (part.startsWith("让") && part.length > 1) {
-      searchTermsSet.add(part.slice(1));
-    }
+    if (part.endsWith("的") && part.length > 1) searchTermsSet.add(part.slice(0, -1));
+    if (part.endsWith("地") && part.length > 1) searchTermsSet.add(part.slice(0, -1));
+    if (part.endsWith("得") && part.length > 1) searchTermsSet.add(part.slice(0, -1));
+    if (part.endsWith("了") && part.length > 1) searchTermsSet.add(part.slice(0, -1));
+    if (part.startsWith("使") && part.length > 1) searchTermsSet.add(part.slice(1));
+    if (part.startsWith("被") && part.length > 1) searchTermsSet.add(part.slice(1));
+    if (part.startsWith("让") && part.length > 1) searchTermsSet.add(part.slice(1));
   }
   
-  // Sort search terms by length descending to match the longest synonym first
   const searchTerms = Array.from(searchTermsSet)
     .filter(term => term && term.length >= 1)
     .sort((a, b) => b.length - a.length);
 
-  // Try to replace the matched Chinese part in the translation sentence
   for (const term of searchTerms) {
     if (translation.includes(term)) {
       return translation.replace(term, word);
     }
   }
 
-  // Fallback: search for shorter matched substrings from parts
   for (const part of parts) {
     for (let len = part.length; len >= 2; len--) {
       for (let start = 0; start <= part.length - len; start++) {
@@ -1169,7 +397,6 @@ export function getHybridSentence(w: Word, translation: string): string {
     }
   }
 
-  // Final fallback: append key word in parenthesis if no match was found
   if (translation.endsWith("。") || translation.endsWith("！") || translation.endsWith("？")) {
     const punc = translation.slice(-1);
     return `${translation.slice(0, -1)} (${word})${punc}`;
@@ -1177,6 +404,379 @@ export function getHybridSentence(w: Word, translation: string): string {
   return `${translation} (${word})`;
 }
 
+// Maps scenario checkpoints/moments to coherent level and step progress
+export function getScenarioSettingAndTitle(
+  scenarioId: string,
+  levelNum: number,
+  index: number,
+  stepIndex: number,
+  opponentName: string,
+  companionName: string,
+  selfTitle: string,
+  partnerPronoun: string,
+  sonOrDaughter: string,
+  isBranch: boolean
+): { title: string, setting: string } {
+  let baseTitle = "";
+  let setting = "";
+
+  switch (scenarioId) {
+    case "ancient_palace":
+      if (stepIndex === 0) {
+        baseTitle = "祠堂跪寒";
+        setting = `在金丝楠木铺成的冰冷祠堂里，${opponentName}高坐上首，命丫鬟捧着一碟发毒的面点，冷笑着讽刺你作为${sonOrDaughter}卑贱庶出的出身，甚至要克扣你屋里所有的过冬炭火。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "深夜烛捕";
+        setting = `深夜寒风吹动着破烂的窗棂，${companionName}正含泪为你掌灯温书。突然房门被一脚闯开，${opponentName}阴沉着脸带着几个浑身横肉的家丁，硬说你私藏了勾结外人、谋害家族的违禁密约。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "膳簿风浪";
+        setting = `膳房大堂里乌烟瘴气。${opponentName}带着底下的刁恶奴才故意拿出数本伪造的香油采买账卡，当着合府奴仆的面，百般挤兑嘲讽你，企图以荒诞的账目陷害你中饱私囊。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "篁亭劫挡";
+        setting = `碧波草亭畔细雨微下。${opponentName}突然带着多名打手拦住你和${companionName}的去路，态度居高临下，用极度不屑的眼神看着你的简朴衣着，威逼你交出生母留下的白玉饰坠。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "寿筵天书";
+        setting = `老太君八十寿诞席间名流毕至，二小姐与嫡母狼狈为奸。${opponentName}故意当着满堂亲旧寿客的面，将一叠毫无头绪的西域番书番贴摊在桌上，逼你这位庶出子嗣当众吟诵解读，意图让你当场出乖露丑。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "考产验匙";
+        setting = `你开始接管部分内宅产业，府内掌事嬷嬷冷笑连连。${opponentName}带着底下的账房掌柜，在一旁戏谑地冷眼旁观，当面嘲笑你不过是个毫无阅历的雏儿，极力质疑你不可能管明白千万库金往来。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "设棚施粥";
+        setting = `大雪封山，你带着${companionName}在内宅大门口开仓设棚、赈济穷苦灾民。${opponentName}却在灾民中暗中买通几个地痞无赖起哄，肆意造谣讽刺你的米粮里掺满泥沙，大喊你不安好心、中饱私囊。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "别院药香";
+        setting = `你悄悄走进冷僻幽静的冷角别院，正好撞见${opponentName}与贴身影卫私下交接一纸密信和古书药香。看见你突然现身，对方急急遮挡，皮笑肉不笑地端来一碗参茶强逼你喝下以绝后患。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "钦差指案";
+        setting = `朝廷宣封钦差亲临府上，考核地方海运商业继承权。${opponentName}不仅不予配合，更当着满堂同僚与钦差大员的面，谗言诬告你生性顽劣、忤逆尊长、胸无点墨，完全没有继承家业的才能。`;
+      } else {
+        baseTitle = "乾坤凤还";
+        setting = `最后的夺权继承之夜，正堂之内灯火通明。老太君叹气不语，${opponentName}神色近乎癫狂，带着账房与内侍作最疯狂的挣扎，一口咬定你生父母留下的地契契约和名录全是假造的赝品。`;
+      }
+      break;
+
+    case "imperial_court":
+      if (stepIndex === 0) {
+        baseTitle = "殿选秀艳";
+        setting = `在巍峨庄严的太和殿白玉台阶前，金秋殿选大典盛大开启。不怀好意的秀女首领 ${opponentName} 在一众候选秀女面前昂首踱步，指指点点地讥讽你清雅便服寒酸，断言你无法迈进皇宫一步。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "太液仙图";
+        setting = `太液池畔月华如水，皇上与太后突然驾临。宠妃 ${opponentName} 故意在圣上面前推举你，非要你当场就番邦朝贡的‘无字羊皮天书图卷’进行即兴剖析并说明典故，成心等着让你出错受罚。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "女政官阻";
+        setting = `内侍尚书省考核长廊里秋风烈烈。敬事房领事嬷嬷 ${opponentName} 极力阻拦你登记名册，在百般繁文缛节上对你吹毛求疵，傲慢地威胁要以仪规不整之名将你直接撵秀出宫。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "雪中长街";
+        setting = `大雪封锁的夹道红墙上，不怀好意、眼高于顶的贵嫔 ${opponentName} 故意指控你的香熏弄脏了御赐的前朝贡缎，罚你独自在冰天雪地中长跪三巡并吟诵过往警言。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "御膳扣炭";
+        setting = `御膳房领事太监联合底下的势利太监，故意克扣你寝宫的防寒木炭。面对你和${companionName}的主动质问，${opponentName}态度傲岸冷漠，甚至出言讥讽说不受宠的常在不配用上等银炭。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "反咬密药";
+        setting = `你在碧房寝宫抄写手札，暗藏杀机的贵妃心腹 ${opponentName} 突然搜宫。他们从你自用香囊的夹层里搜出一包微毒香粉，当众冷笑不止，非要指控你私通外臣、意图谋害尊师和太后。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "星轨谶谜";
+        setting = `番帮使臣在寿康宫呈上一卷据称举朝文武皆不可识的‘上古星轨谶语’。${opponentName}为了让你当众出洋相，急忙举荐说你平时在常在所喜好钻研各类异国奇特文字谶谜。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "红墙阴罗";
+        setting = `深夜宫苑一角。${opponentName}领着数名端持火把的羽林军包围了后院，脸上杀机毕现，大肆叫嚷称你深夜秘密出入神庭一角是企图暗算贵妃、败坏祖制。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "宗庙昭案";
+        setting = `皇家祈福大典上，丽贵妃联手朝中豪门。${opponentName}当着满朝文武与圣上皇后的面狂攻，声称你母家以前参与海商密谋、大逆不道，言之凿凿命令你自废常在名号、解交宗人府。`;
+      } else {
+        baseTitle = "凤主乾坤";
+        setting = `圣皇决定赐你协理六宫掌事凤印。圣天大殿前，面色阴沉的丽贵妃 ${opponentName} 与几位嫔妃死死阻挠，咬定你年纪过轻、德行浮夸，无才管理百年太后大账与宫闱历年名册支出。`;
+      }
+      break;
+
+    case "modern_city":
+      if (stepIndex === 0) {
+        baseTitle = "早会重案";
+        setting = `周一早会，办公室内空气紧绷极点。高冷项目部总监 ${opponentName} 突然将一叠超复杂的跨国英文审计纠纷案重重甩在你的桌上，命令你必须在今日内完美解决，存心刁难。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "酒会巨鳄";
+        setting = `外滩华灯璀璨，高端名流汇聚。一位身价数十亿的外资投行合伙人 ${opponentName} 端起冷饮，傲慢地打量着你的简朴便装，对你提出的未来商圈合并概念报以极度不屑的嘲弄。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "极限数据";
+        setting = `距离大老板和小晴学姐到场仅剩数分钟。你突然发现核心汇报PPT里的关键估值资产表被竞争对手 ${opponentName} 恶意删除，众人全在等着看你如何在名流决策层面前结结巴巴出丑。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "合同狙击";
+        setting = `极其高档的咖啡厅谈判一隅。傲慢的乙方代表 ${opponentName} 不耐烦地用指节敲击着红木桌面，百般挑剔英文地契商务条款，扬言你若拿不出顶级方案他就立刻取消合作。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "天使风投";
+        setting = `在名流如云的风险投资沙龙上，眼高于顶、手握千万风投资金的头部投资大佬 ${opponentName} 傲慢地打断了你的技术演讲，挑剔地讥讽说你们整个项目的财务背景是一纸空文。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "黑卡底查";
+        setting = `在摩天大楼下的顶级商务会所内。竞争对手派来的资深高管 ${opponentName} 假意投来高价猎头方案，暗中却用一个极其刁钻、布满致命陷阱的行业重组问题对你进行底牌刺探。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "约合同作废";
+        setting = `由于对家公司高层背后操作，重磅级跨国核心大客户宣布解除与你们公司的合作。小会议室里总监等责任方互相推委，${opponentName}更是当面对你百般挤兑，妄图强推你充当替罪羊。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "跨欧博弈";
+        setting = `并购专家会谈的主会议大厅里。傲慢的北欧代表 ${opponentName} 敲着表单，大肆用英文嘲笑你们的跨国运营和账单管理，宣称你们根本不懂商业规矩、不配拥有控制股。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "公关黑雨";
+        setting = `突发极其严重的负面公关危机。公司的林经理和敌对媒体抢先用大量假数据控制了业界论调，水军头头 ${opponentName} 更是挡在公司门口对你百般冷嘲热讽，试图将阴谋坐实。`;
+      } else {
+        baseTitle = "巅峰董事";
+        setting = `在数十位世界级名流富豪和财团评委云集的终极合伙人董事会上。无路可退的项目总监 ${opponentName} 发动最后的围攻，一口咬定你提交的资本管理重组方案完全是虚伪的数据欺诈。`;
+      }
+      break;
+
+    case "college_life":
+      if (stepIndex === 0) {
+        baseTitle = "阶梯高点";
+        setting = `在大阶梯教室里，严厉的张教授面色黑冷，正在严厉训话。邻桌的高冷学霸 ${opponentName} 故意给你指点错误的答卷页数，害你在教授挑人时被盯住，上百人的目光齐刷刷聚集你脸上。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "篝火琴威";
+        setting = `校吉他社在操场举办篝火晚会，微风吹拂。学科全能的狂妄社长 ${opponentName} 抱着木吉他，当着上百学弟学妹和${companionName}的面，高声椰揄你，笑你口语极其蹩脚，不配做外文主持。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "一辩救澜";
+        setting = `校际双语辩论赛总决赛大厅里。对方学校的尖刻辩手 ${opponentName} 抛出一个充满圈套、混杂古文理大义的英文命题，满面不屑地等着用这个致命漏洞彻底击垮你方的立场。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "宿考风波";
+        setting = `因为被宿舍小人恶意栽赃，宿管阿姨在寝室走廊里当众训斥你们。站在一在一旁的挑刺狂 ${opponentName} 更是带着看乐的心态在一侧起哄作乐，嘲讽你连基本的行文道德都无法自律。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "神藏突考";
+        setting = `张教授在讲台上黑下脸，突然宣布进行突击性的高古文献原版解读。全班一片绝望，优等生 ${opponentName} 特意晃了晃手中的高阶答券，冷笑着讥讽说凡夫庶子根本跨不过本页翻译门阶。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "无音演告";
+        setting = `百人学术大礼厅中。你正要登台开始全语种演讲，麦克风由于遭到人使坏突然死机，台下一片哄乱。体育组长 ${opponentName} 沉沉地喝住你，大声指责无能力学苑弟子就该下台出局。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "林荫告折";
+        setting = `你正要在林荫大道向心仪的对象告白。高傲自满的校辩论社长 ${opponentName} 突然横插过来拦在中间，一把夺过你的手札，大声讽刺你的文采语言俚俗下等，根本没有半分文化素养。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "名额考答";
+        setting = `在年度国家励志奖学金重点名额评审会上。势利的评选组长 ${opponentName} 翻查着你提交的洋文翻译材料，讥讽你对句子的把握是东拼西凑、胡说八道。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "跳蚤摊霸";
+        setting = `在喧嚣热火的学生跳蚤交易市场上，校园恶霸 ${opponentName} 故意踢坏你和${companionName}的学习平板，反而贼喊捉贼，声称你们兜售劣质货卡，在道口严词叫嚣勒索。`;
+      } else {
+        baseTitle = "论文谢终";
+        setting = `最后的毕业论文公开答辩大台下。几位受指使刻意为难你的严厉外聘专家 ${opponentName}，针对你毕业论文中最末尾的核心引用展开极其致命的轮番刁难，令所有同学为你提心吊胆。`;
+      }
+      break;
+
+    case "fantasy_adventure":
+      if (stepIndex === 0) {
+        baseTitle = "萨满咒煞";
+        setting = `在乱石林立、腐尸堆积的哥布林祭坛废墟前。残暴的哥布林祭司 ${opponentName} 挥舞着淬毒魂杖，发出刺耳的骨哨啸叫，对你的识海直接发起狂暴的暗夜精神侵蚀。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "王座龙音";
+        setting = `残败的古神王座遗迹中，黄金神谕散发着幽蓝奥光。暗影巨龙 ${opponentName} 庞大的骨翼拍动巨石，在废墟上空高傲地俯视你，暴虐地吐出龙息，要你自陈为何敢擅闯禁地的罪名。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "巫妖冰潮";
+        setting = `在迷失寒冰的死灵古墓室。森冷重重的亡灵巫妖 ${opponentName} 带着数百骷髅军团破冰而出，释放出冻结生命的死亡寒霜，嘎嘎狂笑说你和法书精灵阿尔法只是毫无作用的蝼蚁尘埃。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "金门巨守";
+        setting = `在刻满上古图腾防线的元素藏宝库前。巨泥石魔石像 ${opponentName} 用拳头轰隆砸打地面，双目射出炙热火光，限时逼你在三个呼吸内完美吟出开启藏宝库的魔能古训。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "荆棘魔法师";
+        setting = `在荆棘迷宫的最深死角。黑巫魔教高级狂热魔导师 ${opponentName} 拦住去路，手中黑色法杖溢出暗雷，讥讽指责无能的学徒根本不配持有圣魔法灵，放肆宣称待会要把你的神元彻底捏爆。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "神泉殿罚";
+        setting = `在瑞气飘袅的至高神殿洗礼泉池旁。傲慢的光明神殿大祭司 ${opponentName} 手拄白色重质长枪，狂言斥责你的凡俗出身，扬言要直接废除你吟唱神谕净华术的资格与传承。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "圣塔秘典";
+        setting = `在漂浮于虚空之上的圣魔法天塔天梯顶端。魔法学院的老祭司 ${opponentName} 严苛地注视着你，手捧残破的禁忌圣典，嘲弄你的魔力低下，要求你必须在十秒内完美破译秘典。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "幻境死斗";
+        setting = `在迷雾重重的古老镜面幻境之中。邪恶化身 ${opponentName} 幻化出漫天黑羽与死光，猖狂大笑，宣称你不过是凡尘的一介尘埃，企图用精神幻术将你彻底湮灭。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "恶龙祭典";
+        setting = `在烈火喷涌、岩浆翻腾的恶龙墓穴石柱上。狂热的叛变信徒首领 ${opponentName} 企图用秘药向恶龙血祭${companionName}。看到你的到来，他皮笑肉不笑地挥动骨剑，威逼你停下脚步接受黑夜试炼。`;
+      } else {
+        baseTitle = "奥术星空";
+        setting = `在星光璀璨的世界之树最顶端星能宝座下。黑曜石军团首领 ${opponentName} 统帅着大批幽鬼守军，面色狰狞、语气轻蔑地质疑你不配掌握永恒奥术，企图一口将你们捏碎。`;
+      }
+      break;
+
+    case "showbiz_superstar":
+      if (stepIndex === 0) {
+        baseTitle = "发布刁难";
+        setting = `在人头攒动、闪光灯不断的电影开机发布会上。傲慢的公司高层 ${opponentName} 故意当着无数长枪短炮和娱乐名记的面，冷言讽刺你被资本封杀是不自量力，逼你现场做高难度无实物表演，试图让你当众退场。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "试镜陷阱";
+        setting = `在光线昏暗的帝都顶奢电影试镜大厅里。曾排挤你的资深竞品艺人 ${opponentName} 坐在评委席侧，用极其阴阳怪气的语调宣称你这种过气的小演员不配拿到主角名额，命令你立刻在五句英文台词内打动全场。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "综艺挤兑";
+        setting = `在录制现场，数十台高清机位高高架起。极其势利的王牌节目女主持人 ${opponentName} 联合其他嘉宾故意在游戏环节将最难的即兴英文辩词推给你，冷笑着等着看你结巴卡壳的惨样。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "通告阻截";
+        setting = `在时尚盛典红毯大厅的后台，香气袭人。金牌经纪人沈姐正拉着你准备登台，傲慢的对家顶流 ${opponentName} 却带着六名保镖直接用豪车将走廊死死堵住，对你投来不屑的冷光，挑衅说无名之辈不配踩这片红地毯。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "合同刺客";
+        setting = `在寸土寸金的大资本谈判桌旁。刁蛮的跨国代言商高管 ${opponentName} 抱着双臂，居高临下地把一份布满英文漏洞的合同砸在你面前，嘲讽说你不签这份屈辱霸王合同，立刻就会在娱乐圈彻底消失。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "狗仔堵截";
+        setting = `在细雨淅沥的酒店地下车库。数名受资本指使的狗仔队长 ${opponentName} 突然从黑暗中窜出，将刺眼的闪光灯不断往你脸上按，语气恶劣极点，逼问你关于私生活的恶意假新闻、意图诱导你。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "金牌黑料";
+        setting = `在宽敞的总裁办公室，竞争对手指使的公关水军头子 ${opponentName} 正翘着二郎腿，亮出数张精心电脑合成的恶意“假黑料”，得意冷笑道若不放弃新剧女一号，立刻让你社会性死亡。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "国际试水";
+        setting = `在群星闪耀的戛纳主宴会厅。骄横的外籍大导 ${opponentName} 用极难听懂的西域连读英文，高傲地对你和沈姐指出由于文化背景，你们这辈子都不可能登上世界级主流影坛，逼你当场用古典英文回驳。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "赞助撤回";
+        setting = `在大资本财阀合伙沙龙中。曾承诺赞助你们个人工作室的多金大佬 ${opponentName} 突然变脸反悔，当众撕碎了协议，讥笑称你不过是颗快坏掉的明星棋子，扬言要把沈姐和你一起赶出名流圈。`;
+      } else {
+        baseTitle = "巨星加冕";
+        setting = `在万众瞩目、金碧辉煌的世界巨星颁奖典礼最高领奖台上。昔日联合封杀你的资本巨头 ${opponentName} 脸色铁青地站在一侧，作最后挣扎，大声指责你没有国际奖项认可，不配顶戴这顶金王冠。`;
+      }
+      break;
+
+    case "husband_rebound":
+      if (stepIndex === 0) {
+        baseTitle = "家宴冷眼";
+        setting = `在楚府豪华而刺眼的家宴主桌旁，菜香扑鼻。对你百般嫌弃的岳母大反派 ${opponentName} 傲慢地当众拍响桌子，指着你那一身廉价的地摊西装，刻刻地嘲讽你不学无术、连入赘的资格都不配，逼你跪着给所有贵宾倒酒茶。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "退婚耻辱";
+        setting = `在大平层贵宾茶室里。傲慢的第三代世家之子 ${opponentName} 将一叠退婚契约重重拍在大理石桌上，极度鄙夷地斜睨着你，扬言你癞蛤蟆想吃天鹅肉，连给他家提鞋都不配，逼你立刻签字滚退。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "大少亲临";
+        setting = `深夜大雨倾盆，你正在客厅拖地。王管家还未亲临，得知底细的刁钻大舅子 ${opponentName} 带着保镖猛踹客厅大门。他们狂妄大笑着将一桶污水倒在地板上，骂你是没用的废物，逼你当场把地板擦洗干净。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "试炼开始";
+        setting = `在王管家的豪车劳斯莱斯后座。王管家亲切告知第一期家族商业单词试炼开启。可就在此时，竞争对手楚家执事 ${opponentName} 却在路口带人拦截，并极度轻蔑狂妄地声称楚少目永远只是烂泥，妄图在三分钟之内收缴资金。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "老宅交钥匙";
+        setting = `在气派的楚家老宅议事堂。掌印嬷嬷和刁恶的亲戚 ${opponentName} 冷笑连连地守在金库库房前。他们硬生生把持着老宅的掌事钥匙，轻慢地质疑你根本管不明白千万巨资的财务账簿和合同凭卷。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "黑道砸场";
+        setting = `在奢华而安静的外滩港端茶楼包厢。楚氏敌对家族暗地里的打手头子 ${opponentName} 领着一众凶狠的小弟，故意砸烂了你眼前的清代古茶具，吐着唾沫威逼你把王管家转让的全部商铺股份无偿交出。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "外戚陷害";
+        setting = `临近家族核心会议，不怀好意的表哥 ${opponentName} 居然串通内鬼，将大批毒品或违禁发票私塞进你的公文包里。他带人堵在正堂前，冷笑不止指控你企图败坏祖宗名节、要将你送警。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "商业逼牌";
+        setting = `在海运外资重返亚太的谈判会议高座。傲慢的外资财团大代理人 ${opponentName} 故意用超级复杂的英文地契欺诈协议做戏，在百般商业条款上给你设套，语气轻佻不屑地声称只要你错答一个词他就一局全收。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "公害公关";
+        setting = `林城市的黑道豪门勾结小媒体。不怀好意的主编 ${opponentName} 在各大报纸和都市大屏疯狂捏造你早年倒插门期间的所谓受虐丑闻。媒体发布会门前，他领着长枪短炮的记仇水军将你和王管家死死围困。`;
+      } else {
+        baseTitle = "一雪前耻";
+        setting = `楚家终极祭祖大典主坛之上！昔日看不起你的岳母大反派、刁恶亲戚以及情敌富少 ${opponentName} 脸色煞白地围在一起。王管家带着八百辆劳斯莱斯亲临现场，而前对头仍不死心地在台上叫嚣你出身低。`;
+      }
+      break;
+
+    case "wuxia_jianghu":
+      if (stepIndex === 0) {
+        baseTitle = "下山遇劫";
+        setting = `在险峻无常的落枫坡崖边，山风呼啸。不友善的魔教前哨堂主 ${opponentName} 带着数名手持鬼头刀的黑衣凶汉，面目狰狞地拦住你和婉儿的下山去路，放声狂笑讥讽你们神剑门尽是缩头乌鸦，逼你们自废修为、交出名门令牌。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "小店暗镖";
+        setting = `塞外悦来酒家偏桌前，油灯昏黄。身怀绝技的黑道飞贼 ${opponentName} 伪装成跑堂伙计，在给你递送老白干汤茶时，眼中寒芒乍现，手底突发三枚淬有剧毒、见血封喉的‘幽骨追魂镖’，逼你十秒内看破他的虚实杀招。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "破庙围杀";
+        setting = `在黑雨滚滚的荒郊破庙。居心叵测一派的唐门叛宗护手 ${opponentName} 带着数十名杀手，突然包围合殿，吹入无色无味的暗夜奇毒。对方极其猖狂地命你二人绝望断指，否则死无全尸。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "五岳逼谱";
+        setting = `在雄伟的武当九霄真武大堂。道貌岸然的五岳盟主 ${opponentName} 借端找衅，纠集各派长老在大厅大声拍案，威逼利诱你当众倒背出生父母留给你们神剑门绝世剑谱的核心古训。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "客栈参毒";
+        setting = `塞外龙门古旧客栈偏桌，烛影摇曵。面目狡诈的副头目 ${opponentName} 特意端上一碗热气滚滚、绿香异样的羊肉老汤，在四桌黑道死士蓄力拔刀的环境下，阴阳怪气地强逼你们痛饮。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "天碑藏梵";
+        setting = `无名奇断崖的摩崖石刻前。黑道武圣大剑师 ${opponentName} 按剑昂头，指着石刻上高深难辨、皆为梵语西域名典的‘伏魔梵文’，单卡冷声讥笑，声称你这凡夫俗子断不能辨其中半字。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "熔岩火抉";
+        setting = `火山熔岩剑池火蟒乱腾，气浪扑身。恶门叛将 ${opponentName} 扣押着受伤不支的婉儿，用淬毒利箭抵着她的心房，狂笑逼你立刻跳熔岩自尽，发出自得意满的狂叫叫嚣。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "少室大诬";
+        setting = `在少室山阴冷无比的祈福宗堂。道骨魔心的伪君子 ${opponentName} 纠集名门掌门百名，在大庭广众、天下英豪面诬造你早已坠入魔派，言辞凿凿命令你自废命功、立刻向武林请罪。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "黄沙枯劫";
+        setting = `瀚海茫茫大沙暴暴卷，商队受阻。悍匪巨盗 ${opponentName} 提着双刀堵死唯一的甘泉枯井，脸色残暴嚣张，命令你立刻拿走所有财贝和唯一的百年古方圣药作为买命之资。`;
+      } else {
+        baseTitle = "神炉决裂";
+        setting = `在昆仑邪君熔岩炼金大殿。叛逆少主 ${opponentName} 提着邪魔玄兵，傲然将你们神剑大宗的先师重匾踢成碎木，公然疯狂嘲笑你门下一生都是手无肤之智之辈，逼你在铁火前做生死决。`;
+      }
+      break;
+
+    case "mall_empire":
+      if (stepIndex === 0) {
+        baseTitle = "对赌哗然";
+        setting = `在全城瞩目的年度行业听证兼对赌大会上。企管内鬼 ${opponentName} 头戴金丝眼镜，带头哗众喧哗起哄，疯狂地耻笑你接盘这个破产商场是白白等倒闭、自误前途。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "洋图逼驳";
+        setting = `在金碧辉煌的亚太总部招商大堂上。高傲骄蛮的大中华总代理 ${opponentName} 当着随员，将你和林助理的心血企划案直砸入纸篓，极度冷漠地强要你现在拿出无懈可击客流量支撑来，否则拒绝招商。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "高估压盘";
+        setting = `在总部核心合议室，总常务副总裁带着海归审计师 ${opponentName} 拍着损益财务大报，当众讥刺你们重更企划纯属脑残异想天开，大声叱呵，限时一刻钟内逼你主动交印离职。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "金沙对冲";
+        setting = `在一线奢华大牌云聚的主编招商高端酒桌上。不友善的竞争对手百系集团董事长 ${opponentName} 杯不停杯，当着一众品牌高定会长的面，极尽嘲弄说你不论是背景还是文化皆属二等。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "银主逼约";
+        setting = `由于内鬼搞鬼挪走储备金，傲慢自大的银行银主 ${opponentName} 朝你办公桌重摔催促还款书，冷笑着宣称如果没有十亿保证，将立刻按合同封查商场地契图卷并强收地。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "水军砸场";
+        setting = `商业敌手雇了名不经传的数据评估黑客 ${opponentName}，在财经平台放出恶意剪辑文，大肆宣告各商户已经大举撤橱。面对业主和林助理的惊慌，对家在会客厅阴冷看戏。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "重选恶意";
+        setting = `在集团超级股东股权变配大堂里。居心不轨的金融巨鳄 ${opponentName} 联合外戚亲戚，百般耻笑你的商管现金流早已严重赤字崩溃，威逼利诱想强行在半分钟内恶意吞下整盘股印。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "账务大雷";
+        setting = `年末总部闭门大审计，气氛冷杀。分管二常务当场抛出伪造的一大叠账册，上面凭空列出了千万元的坏账。财务督察 ${opponentName} 心怀不轨地逼你当堂辩明，企图当堂送警。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "媒体逼问";
+        setting = `商场周年庆狂喜重典上黑幕风波突起。竞争对头买通的恶意周刊名记 ${opponentName} 带领二十台摄影长枪短炮将话筒狂捅你胸前，尖锐刁刻地诱导，逼你承认账上现金彻底枯竭。`;
+      } else {
+        baseTitle = "商帝临冕";
+        setting = `在百家富商巨头、千亿财富主宰峰会的金星台上！宿敌巨头董事长 ${opponentName} 带着大批勾结的旧部做苏死挣扎，公然傲笑质疑你绝对不可能拿出百年唯一授权极品协议，大声哄退你。`;
+      }
+      break;
+
+    case "detective_deduction":
+      if (stepIndex === 0) {
+        baseTitle = "庄馆拍案";
+        setting = `在风雨交加、暴雷阵阵的封闭老庄园大厅里。男爵 ${opponentName} 疯狂拍着桌子辱骂你多管闲事，一旁的老督察也是黑沉着白脸，当面极度轻蔑嘲笑你是一无所解、浪费时间的探案毛头小子。`;
+      } else if (stepIndex === 1) {
+        baseTitle = "深夜枭封";
+        setting = `深夜寒雾重重罩。一号案发现场。贪婪的黑市文物倒卖手 ${opponentName} 握着那封刚被枭鸟送来的神秘密信纸，得意冷言大笑，声称你便是用两百年脑力也破查不出纸上半个字母的意思。`;
+      } else if (stepIndex === 2) {
+        baseTitle = "督察黑受";
+        setting = `凶案重点长廊警戒拉索。收取重金的败类督察 ${opponentName} 极力在前面阻截你与助手华生查勘现场，拍着胸脯佩章狂言威胁你没有警令直接犯禁，立刻要拘捕你。`;
+      } else if (stepIndex === 3) {
+        baseTitle = "药辩狡诡";
+        setting = `钟楼密室案突现。心狠手毒的配药推销员 ${opponentName} 指着地上的空药瓶，大声反辩，非信誓旦旦声称里面的成分是普通感冒药水、绝无含毒，讽刺你的法医报告全是捏造。`;
+      } else if (stepIndex === 4) {
+        baseTitle = "阴渠人质";
+        setting = `在极其阴暗、恶臭难当的地下水道死角。凶残歹毒的买主 ${opponentName} 手端冰冷猎枪、抵着被绑架的华生的大好头颅，狞笑不止指使，威逼你当场交出写满血案契书的铁册。`;
+      } else if (stepIndex === 5) {
+        baseTitle = "法医吹毛";
+        setting = `苏格兰场停尸间充满足温。极度自矜高傲的法医官 ${opponentName} 手枕白大褂，傲笑驳斥你的隐藏伤处论，坚称死者全是意外突发心梗自然而死，大肆斥责你无物理学识。`;
+      } else if (stepIndex === 6) {
+        baseTitle = "篡改遗契";
+        setting = `老王公在寝宫内暴毙，分产争夺大战。贪婪狂躁的侄女婿 ${opponentName} 拿出一大叠极富条理、明显篡改的古书遗册，警察局手下更作爪伥，逼迫你这个外人立刻闭嘴签名然后走开。`;
+      } else if (stepIndex === 7) {
+        baseTitle = "血影码头";
+        setting = `在风高雨烈、空寂漆黑的废弃码头。满面血腥在逃悍凶 ${opponentName} 擦着弹壳，得意而狰狞朝被绑捆的${companionName}开冷枪，放声狂笑说不仅是你，便是全苏警也玩弄于其股掌，逼你跪下。`;
+      } else if (stepIndex === 8) {
+        baseTitle = "密码劫夺";
+        setting = `银行失窃，现场只留一行密码。犯罪帝国高干 ${opponentName} 带着打手黑压压合阻前路，皮笑肉不笑冷嘲你毫无智慧解破此条密码，限你三秒束手就擒。`;
+      } else {
+        baseTitle = "百年大诉";
+        setting = `在威严、大理石铺红地毯的最高皇家审判殿堂前！罪人 ${opponentName} 带着大批高级国际律师，面带胜利微笑嘲笑你的控告全是非法造谣，大法官一拍法槌，命令你拿出无可置疑的铁证。`;
+      }
+      break;
+
+    default:
+      baseTitle = `初显才智`;
+      setting = `在浩瀚茫茫的星际神轨中。${opponentName}拦阻在前，大声质问你如何通过这道神刻结界考验。`;
+  }
+
+  let title = "";
+  if (isBranch) {
+    title = `【${scenarioId === "ancient_palace" ? "大宅" : scenarioId === "imperial_court" ? "后宫" : isBranch ? "支线" : "逸事"}支线 · 逸事探奇】第 ${index + 1} 幕 · ${baseTitle}`;
+  } else {
+    title = `【第 ${levelNum} 关 · 第 ${index + 1} 幕】${baseTitle}`;
+  }
+
+  return { title, setting };
+}
+
+// Packages the text and scenarios into rich cohesive story segments for UI mapping
 export function generateStoryContent(
   scenarioId: string,
   levelNum: number,
@@ -1190,131 +790,112 @@ export function generateStoryContent(
   const selfTitle = gender === "男" ? "大少爷" : "大小姐";
   const partnerPronoun = gender === "男" ? "小师妹" : "师弟";
   const sonOrDaughter = gender === "男" ? "庶出少爷" : "庶出小姐";
-  const sonOrDaughterChao = gender === "男" ? "乘龙快婿" : "家族继承女千金";
 
   const items = wordList.map((w, index) => {
-    let intro = "";
-    let choicePrompt = "";
-    const match = WORD_SENTENCES[w.word.toLowerCase()];
+    const match = getAdaptedWordSentence(w.word, scenarioId);
     const enSentence = match ? match.sentence : "";
     const zhTranslation = match ? match.translation : "";
     const hybridSentence = getHybridSentence(w, zhTranslation);
     
-    switch (scenarioId) {
-      case "ancient_palace":
-        if (isBranch) {
-          intro = `【大宅支线 · 秘密探秘】你听巧儿悄言说，冷角别院深夜隐隐有异光闪烁。你和巧儿轻手轻脚潜入旧阁，在积满灰尘的双层妆匣后，发现一封尘封已久的陈旧血书。上面歪歪扭扭地写着：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这一惊人细节让你这位 ${sonOrDaughter} 回忆起生母当年的死因，顿觉重重玄机掩盖……`;
-        } else {
-          intro = `【第 ${levelNum} 关：初显锋芒】威严的嫡母坐在金丝楠木椅上盯视着你，旁边的大少爷添油加醋地煽风点火。今天若是这道难题答不出来，便要罚你去克扣三个月例银。你面对众人幸灾乐祸的眼神，不仅没有慌张，反而从容自若地翻开书页，高声朗读并完美释义了这句奥妙英文：<b>"${enSentence}"</b>（意译：${zhTranslation}）。完美无瑕的才华展示让嫡母当场哑口无言！`;
-        }
-        break;
-        
-      case "imperial_court":
-        if (isBranch) {
-          intro = `【御花园支线 · 琴定千秋】月华朦胧，你轻执古琴在太液池畔低诵。高墙树影微动，深受皇上赏识的羽林军统领悄然走至你身后，对你含胸一礼笑道：『娘娘/才人这一句 <b>"${enSentence}"</b>（意译：${zhTranslation}），琴心流露，委实非同凡响。』在这步步杀机的后宫，竟能得遇如此知音，令你感到无限温暖。`;
-        } else {
-          intro = `【第 ${levelNum} 关：御前诗会】皇上今日驾临御花园，全宫秀女御前诗会考核大典开启。不怀好意的丽贵妃向皇上进言让你即兴赋诗献艺。四周秀女都在等着看你出丑。你一袭华美长裙，款款下拜，口中轻吐出的佳作竟是这般妙语惊人：<b>"${enSentence}"</b>（意译：${zhTranslation}）。圣上听毕抚掌大笑，龙颜大悦，连声惊叹你的绝世文采！`;
-        }
-        break;
-        
-      case "modern_city":
-        if (isBranch) {
-          intro = `【魔都支线 · 商务洽谈】周末酒会上，华灯初上，外滩凉风习习。一位身价数亿的外资投行合伙人朝你频频举杯，好奇打听你对科技股战略体系的见解。你整理了一下西装，熟练说出核心推演：<b>"${enSentence}"</b>（意译：${zhTranslation}），侃侃而谈，令对方对你的跨国商务素养叹服不已。`;
-        } else {
-          intro = `【第 ${levelNum} 关：职场巅峰】周一清晨，高冷的Linda总监突然抛下一叠英法双语商业报告要求必须重组提交，否则直接辞退。面对刁难，你顶住压力通宵达旦地在分析报告PPT中写下了最高段位的论述核心：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这无可挑剔的洞察力向全司上下证实了你非凡的专业实力！`;
-        }
-        break;
-        
-      case "college_life":
-        if (isBranch) {
-          intro = `【校园支线 · 迎新风采】校吉他社在操场举办篝火晚会。人气社长将木吉他递前几分：『${selfTitle}，要不要来段即兴Solo点燃全场？』在数十名学弟学妹的热烈欢呼声中，你歌喉轻启，唱出了这首婉转唯美的英文副歌：<b>"${enSentence}"</b>（意译：${zhTranslation}）。篝火旁瞬间爆发出排山倒海的欢呼！`;
-        } else {
-          intro = `【第 ${levelNum} 关：考场对弈】大阶梯教室里，严厉的张教授一指黑板：『倒数第二排开小差的那位，你上来把这道答卷解了！』全班百人目光齐聚你身上。你大步走上讲台，提起粉笔，顺畅无阻地在黑板上书写了例证：<b>"${enSentence}"</b>（意译：${zhTranslation}），并完美得出了答案！引来台下一片震惊与掌声！`;
-        }
-        break;
-        
-      case "fantasy_adventure":
-        if (isBranch) {
-          intro = `【奥术支线 · 古神遗迹】在迷失沼泽深处的世界树残骸前，巨熊石阵燃起奥数幽火。随着你一步踏入，地面瞬间涌现出散发着蓝色极光的古代英文神谕：<b>"${enSentence}"</b>（意译：${zhTranslation}）。你微闭双目感应着天地间元素的流动，开始有条不紊地聚拢吸纳这股浩瀚奥能……`;
-        } else {
-          intro = `【第 ${levelNum} 关：禁咒吟唱】你高擎着魔导书挡住地精骑兵。领队的黑魔法狂徒嘲讽你不过是个凡人。危急关头，阿卡多金钥将神圣的高阶吟唱古语映入你脑海：<b>"${enSentence}"</b>（意译：${zhTranslation}）。你当即释放体内极限法力高声颂出，一道遮日御天、不可动摇的黄金守护符文盾瞬间拔地而起！`;
-        }
-        break;
-        
-      case "showbiz_superstar":
-        if (isBranch) {
-          intro = `【巨星支线 · 整蛊突袭】在下榻酒店里，半夜突袭整蛊节目的摄像机推门而入。在猝不及防、纯素颜未饰的闪光灯聚焦下，你沉着应对。你面向镜头展现出不可思议的高情商风度，并大方流利地说道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。优雅的表现不仅成功破梗，更收割了一波路人粉！`;
-        } else {
-          intro = `【第 ${levelNum} 关：剧组狂飙】《至尊风云》摄影棚里，欺负新人的副导演故意晾了你三小时，百般嘲弄。沈姐冷静地塞给你一页临时修改的重头戏台词。你大步走入镜头，眼神一瞬含泪，演技轰然爆发，用无解的台词功力悲壮吐出一联：<b>"${enSentence}"</b>（意译：${zhTranslation}）。全剧组顿时起立拍案称绝，副导演脸上青红交替！`;
-        }
-        break;
-        
-      case "husband_rebound":
-        if (isBranch) {
-          intro = `【神豪支线 · 拍卖会反爆】珠宝拍卖会上，势利大姑子百般嘲笑你是买不起赠品的穷叫花，正得意时，大管家拍手奉上了全球尊贵黑金卡与千亿代理合同。在一众名流屏息瞩目下，你神定气闲，扬眉吐出一串流利的质问：<b>"${enSentence}"</b>（意译：${zhTranslation}）。锋芒瞬间反噬全座，大姑子吓得当场脸白！`;
-        } else {
-          intro = `【第 ${levelNum} 关：赘婿/赘媳扬眉吐气】丈母娘过寿，你奉上贺礼，却被刻刻毒的大姑嘲笑为丢人现眼的地摊货。众人蜂拥附和。正当羞辱爆发，门被隆重撞开，十辆迈巴赫一字排开，首富管家领着百名西装保镖齐齐跪迎：『恭迎${gender === "男" ? "姑爷" : "少夫人"}回归！』你缓缓整理风衣，居高临下地朝林家上下冷声道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。一朝爆发，林家上下当场吓得瘫跪在地！`;
-        }
-        break;
-        
-      case "wuxia_jianghu":
-        if (isBranch) {
-          intro = `【江湖支线 · 临仙幽篁】你与${partnerPronoun}在清幽竹林间运功。反派死对头带四大罗汉突袭。${partnerPronoun}咬牙飞身挡在你身前：『剑谱有云：<b>"${enSentence}"</b>（意译：${zhTranslation}）。师兄妹并肩齐上，绝不容邪魔外道小瞧了我等！』`;
-        } else {
-          intro = `【第 ${levelNum} 关：正邪对决】华山险隘，寒风刺骨，叛徒领暗器如雨破空而来。千钧一发之际，你回想起师祖的无上遗训，将平生功力在一瞬灌注到长剑之上，剑气激扬间吐气高声道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。一剑东来，气贯长虹，直取对方致命死穴，杀局瞬间被荡尽！`;
-        }
-        break;
-        
-      case "mall_empire":
-        if (isBranch) {
-          intro = `【商场支线 · 品牌大招商】招商沙龙上，国际一线轻奢大牌总裁态度不冷不热，林助理提醒你对方的痛点。你神情自若，指点沙盘，用完美的商业手笔流畅地总结道：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这无懈可击的前瞻性战略架构，令高傲的亚太区总裁当场叹服！`;
-        } else {
-          intro = `【第 ${levelNum} 关：破产逆袭战】逆水行舟，你临危接班废墟商场。在行业听证会兼对赌大会上，前任采购内鬼带人恶意起哄逼迫你下课。你冷笑上前，打开超大投影显示了你精密的整顿分析，并慷慨解言：<b>"${enSentence}"</b>（意译：${zhTranslation}）。震聋发聩的数据穿透了对手编造的谎言，全场起立喝彩！`;
-        }
-        break;
-        
-      case "detective_deduction":
-        if (isBranch) {
-          intro = `【侦探支线 · 窗台密信】深夜贝克街，迷雾缭绕。一只白羽雪枭敲窗，腿上扣着苏格兰场的精密铜扣锁，里头赫然藏着半张未损烧焦、极富条理的密信纸条：<b>"${enSentence}"</b>（意译：${zhTranslation}）。这行致命线索，为解开庄园悬案提供了至关重要的拼图。`;
-        } else {
-          intro = `【第 ${levelNum} 关：破案如洗】古老庄园的密闭大厅内，男爵拍桌大骂你中伤名流。你慢条斯理地解开厚重大衣，将从挂钟夹缝里搜出的陈旧纸条拍在桌案：『男爵，那你如何解释当时死者手写记录下的这条惊天线索：<b>"${enSentence}"</b>（意译：${zhTranslation}）！』罪名昭彰，男爵浑身剧烈颤抖，彻底认罪！`;
-        }
-        break;
-        
-      default:
-        if (isBranch) {
-          intro = `【修道支线】时空星轨中闪烁着金色奥妙能量。你循着指示，参破了能量柱上镌刻着的千载古语：<b>"${enSentence}"</b>（意译：${zhTranslation}）。你体悟非凡，顺利走完了这段修行支路！`;
-        } else {
-          intro = `【第 ${levelNum} 关：境界考验】在无边无际的求学历程中，星光结界再次从云雾端降落，阻拦你前行。你注视着悬浮于虚空中的神圣英文古句，其言曰：<b>"${enSentence}"</b>（意译：${zhTranslation}）。参透其中的核心词眼即可破阵前行。`;
-        }
-        break;
-    }
+    const opponentName = getOpponentName(scenarioId, levelNum);
+    const companionName = scenario.companionName;
 
-    // Dynamic Post-Processing: replace isolated English sentences & Chinese translation annotations with our immersive hybrid sentence
-    if (enSentence) {
-      // 1. Double quotes standard format: <b>"Sentence"</b>（意译：Translation）
-      const patternDouble = `<b>"${enSentence}"</b>（意译：${zhTranslation}）`;
-      // 2. Single quotes standard format: <b>'Sentence'</b>（意译：Translation）
-      const patternSingle = `<b>'${enSentence}'</b>（意译：${zhTranslation}）`;
-      // 3. Simple quotes standard format: <b>“Sentence”</b>（意译：Translation）
-      const patternSmart = `<b>“${enSentence}”</b>（意译：${zhTranslation}）`;
+    // Linearly advance through the 10 distinct scenes based on word index and level!
+    // Each of the 5 words in a level maps to a completely distinct consecutive step (0, 1, 2, 3, 4, etc.)!
+    // Level 1 ALWAYS starts at step 0 (the prologue/entry plot of the scenario)!
+    const stepIndex = ((levelNum - 1) * 5 + index) % 10;
+    const { title, setting } = getScenarioSettingAndTitle(
+      scenarioId,
+      levelNum,
+      index,
+      stepIndex,
+      opponentName,
+      companionName,
+      selfTitle,
+      partnerPronoun,
+      sonOrDaughter,
+      isBranch
+    );
 
-      if (intro.includes(patternDouble)) {
-        intro = intro.replace(patternDouble, `<b>“${hybridSentence}”</b>`);
-      } else if (intro.includes(patternSingle)) {
-        intro = intro.replace(patternSingle, `<b>“${hybridSentence}”</b>`);
-      } else if (intro.includes(patternSmart)) {
-        intro = intro.replace(patternSmart, `<b>“${hybridSentence}”</b>`);
+    // Evaluate targets to construct an immensely coherent dialogue bridge
+    let bridge = "";
+    const lowerTranslation = zhTranslation.toLowerCase();
+    const lowerEn = enSentence.toLowerCase();
+
+    const isBusiness = 
+      lowerTranslation.includes("公司") || 
+      lowerTranslation.includes("利润") || 
+      lowerTranslation.includes("市场") || 
+      lowerTranslation.includes("合同") || 
+      lowerTranslation.includes("基金") || 
+      lowerTranslation.includes("资金") || 
+      lowerTranslation.includes("财务") || 
+      lowerTranslation.includes("报告") || 
+      lowerTranslation.includes("银行") || 
+      lowerTranslation.includes("股票") || 
+      lowerTranslation.includes("商业") ||
+      lowerTranslation.includes("证券") ||
+      lowerTranslation.includes("地契") ||
+      lowerTranslation.includes("账目") ||
+      lowerEn.includes("company") ||
+      lowerEn.includes("market") ||
+      lowerEn.includes("profit") ||
+      lowerEn.includes("financial") ||
+      lowerEn.includes("business") ||
+      lowerEn.includes("contract") ||
+      lowerEn.includes("report");
+
+    const isPerson = 
+      lowerTranslation.includes("他") || 
+      lowerTranslation.includes("她") || 
+      lowerTranslation.includes("你") || 
+      lowerTranslation.includes("我") || 
+      lowerTranslation.includes("人") || 
+      lowerTranslation.includes("性格") || 
+      lowerTranslation.includes("勤") || 
+      lowerTranslation.includes("谦") || 
+      lowerTranslation.includes("才") || 
+      lowerTranslation.includes("德") || 
+      lowerTranslation.includes("品") || 
+      lowerTranslation.includes("傲") ||
+      lowerTranslation.includes("志") ||
+      lowerEn.includes("he ") ||
+      lowerEn.includes("she ") ||
+      lowerEn.includes("they") ||
+      lowerEn.includes("people") ||
+      lowerEn.includes("person") ||
+      lowerEn.includes("character");
+
+    const bridgeIndex = index % 3;
+
+    if (isBusiness) {
+      if (bridgeIndex === 0) {
+        bridge = `你慢条斯理、神色淡定自若，直接了当地抛出了关键地契账单与绝密商务原本，上面的那段记录明明白白地昭示着：<b>“${hybridSentence}”</b> 如此白纸黑字铁证如山，叫挑衅者脸色大变、惊惧万分！`;
+      } else if (bridgeIndex === 1) {
+        bridge = `你抬手指引全场核对账契，当众朗然高声诵读出这段独占性极其强烈、无懈可击的数据原本：<b>“${hybridSentence}”</b> 这一针见血的信息登时切断了对家伪造凭证的退路！`;
       } else {
-        // Broad fallbacks for any variations: Replace the quote portion and clean up translation footnotes
-        intro = intro.replace(`<b>"${enSentence}"</b>`, `<b>“${hybridSentence}”</b>`);
-        intro = intro.replace(`<b>'${enSentence}'</b>`, `<b>“${hybridSentence}”</b>`);
-        intro = intro.replace(`<b>“${enSentence}”</b>`, `<b>“${hybridSentence}”</b>`);
-        intro = intro.replace(`（意译：${zhTranslation}）`, "");
+        bridge = `你嘴角含笑迎上对方的刺探，气定神闲，甩出一纸契据并清晰背诵出写在正中央的那句密典原判：<b>“${hybridSentence}”</b> 此番洞悉彻底平息了不友好的哄笑！`;
+      }
+    } else if (isPerson) {
+      if (bridgeIndex === 0) {
+        bridge = `你当众挺胸，借由此番德操义理反向逼视对方的无能，不卑不亢地吐露真纯：<b>“${hybridSentence}”</b> 如此傲雪凌霜的大义言词，宛如无形大掌扇在刁难者皮笑肉不笑的脸上！`;
+      } else if (bridgeIndex === 1) {
+        bridge = `面对不自量力的责难，你气度飘逸高旷，顺口吟诵名篇古卷，借赞誉贤人的典故大巧反讽：<b>“${hybridSentence}”</b> 惊才绝绝，直叫那些居心叵测之人无地自容、冷汗直流！`;
+      } else {
+        bridge = `你双眸微阖，神情清雅，冷冷说出这旬考验修身品行的名宿真诠，正面斥退了宿敌的觊觎：<b>“${hybridSentence}”</b> 铿锵有力，震慑得周围挑事之辈面如死灰！`;
+      }
+    } else {
+      if (bridgeIndex === 0) {
+        bridge = `你轻摆衣袂，潇洒昂首，当场念出这行天书典籍里高妙绝伦、蕴含宏大哲理天道的核心论述作为还击：<b>“${hybridSentence}”</b> 言浅意深，将那股蓄意的嚣张气焰彻底熄灭在未萌之时！`;
+      } else if (bridgeIndex === 1) {
+        bridge = `你目光如炬，瞬间捕捉到了宿敌指控中逻辑溃散的大雷。你冷笑着回以先贤警句和深刻推演：<b>“${hybridSentence}”</b> 犹如春雷滚滚，生生敲断了对方无妄盘考的阴冷戏谑！`;
+      } else {
+        bridge = `你大方负手傲立庭前，迎着满堂或是极度怀疑或是幸灾乐祸的视线，字字铿锵地反击道：<b>“${hybridSentence}”</b> 宏大誓言如惊雷拍案，令周围的反派心惊肉跳，不寒而栗！`;
       }
     }
 
-    choicePrompt = `请结合以上语段情境与大义，选择学修核心词【${w.word}】的正确简体中文释义：`;
+    const intro = `${title}\n\n${setting}\n\n${bridge}`;
+    const choicePrompt = `请结合以上语段情境与大义，选择学修核心词【${w.word}】的正确简体中文释义：`;
 
     return {
       intro,
@@ -1322,7 +903,7 @@ export function generateStoryContent(
       choicePrompt,
       climaxTitle: `💥 终极决斗：正面突围！`,
       climaxIntro: `危机时刻降临！你与本关卡的棘手宿敌面对面正面遭遇，他们正发动不择手段的盘问。你必须在完全随机的单词问答连胜中连克数关（将刚刚学到的单词全部一网打尽并答对），才能挫败对方，解围翻盘并赢取丰盛战利品！`,
-      rewardIntro: `恭喜！在${scenario.companionName}由衷的夸赞中，你不仅打脸了反派，还让所有人对你刮目相看！你成功赢取了大量「${scenario.currencyName}」！商店的道具和物资已经全新到货，快去补充助战自定制道具或乘胜追击进入下一关！`,
+      rewardIntro: `恭喜！在${scenario.companionName}由衷的赞叹声中，你成功驳倒了反派，赢取了大量「${scenario.currencyName}」！商店的道具和物资已全新到货，快去补充助战防身道具或乘胜追击解救更多困局吧！`,
       opponentName: getOpponentName(scenarioId, levelNum)
     };
   });
@@ -1330,17 +911,18 @@ export function generateStoryContent(
   return items;
 }
 
+// Generates an array of non-repetitive opponents tailored to each level iteration
 export function getOpponentName(scenarioId: string, levelNum: number): string {
   const list: Record<string, string[]> = {
     ancient_palace: ["阴险毒辣的嫡母大娘", "傲慢刻薄的二小姐", "笑里藏刀的王妈妈", "心胸狭隘的大少爷", "极力阻挠的势利大管家"],
     imperial_court: ["嚣张跋扈的丽贵妃", "居心叵测的高女官", "欺软怕硬的御膳房总管", "高傲冷淡的考功女御", "深嫉你才貌的竞争秀女"],
-    modern_city: ["暗中使绊子的竞争实习生", "刻板暴躁的项目高级副总裁", "百般刁难的乙方甲方代表", "眼高于顶的高傲投资大佬", "同行刺探公司秘密的高级商业间谍"],
+    modern_city: ["暗中使绊子的竞争实习生", "刻板暴躁的项目高级副总裁", "百般刁难的乙方甲方代表", "眼高于顶的高傲投资大佬", "同行探听秘密的高级商业间谍"],
     college_life: ["全校人送严罗王的张教授", "傲慢轻视你的学科全能社长", "隔壁理工高校的高傲辩论队长", "铁面无私、不通情理的宿管阿姨", "经常抓学生典型考核的体育组长"],
     fantasy_adventure: ["残暴嗜血的森林哥布林祭司", "贪婪阴险的被遗弃亡灵巫妖", "重创凡人的遗迹古树泥巨人", "黑巫魔教高层狂热魔导师", "高傲盘旋在遗迹深渊的暗影红龙"],
     showbiz_superstar: ["眼高于顶、见钱眼开的项目副导演", "处处抢你资源的同期小鲜肉/小花", "常年抹黑你的水军头目", "傲慢资本大财团执行董事", "打压你的竞争对头娱乐机构掌权人"],
     husband_rebound: ["常年刻薄作呕、骂你废物的丈母娘", "冷艳而轻视你、暗中出墙的大姨子", "极力想吞食财产的阴损表哥", "瞧低你、冷嘲热讽的林家长辈", "企图暗算你的当地势利无赖黑心商人"],
     wuxia_jianghu: ["昆仑叛徒、行事残忍的恶门少主", "擅长使毒的唐门叛逆刺客护法", "横行江湖、烧杀抢掠的悍匪老刀", "黑道一流杀手阁大剑师", "垂涎你们师门秘笈的伪君子掌门"],
-    mall_empire: ["贪污公款并吃里扒外的商场前任采购内鬼", "故意刁难你、试图看你倒闭的分管常务", "极度挑剔且出言不逊的大租户总代理", "常青藤高冷海归傲慢估值师", "企图收购你们购物广场的对头董事"],
+    mall_empire: ["贪污公款并吃里扒外的商场前任采购内鬼", "故意刁难你、试图看你损败的分管常务", "极度挑剔且出言不逊的大租户总代理", "常青藤高冷海归傲慢估值师", "企图收购你们购物广场的对头董事"],
     detective_deduction: ["满口谎言、伪造在场证据的庄园男爵", "在夜雾中劫持人质的亡命杀手", "收受黑钱、包庇歹徒的腐败巡警督察", "手段狠辣、贩卖禁药的黑市配药推销员", "莫里亚蒂暗中安插的高智商犯罪骨干"]
   };
   const array = list[scenarioId] || ["高傲的考核官"];

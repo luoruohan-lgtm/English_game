@@ -95,3 +95,13 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
 }
+
+export interface StorySegment {
+  intro: string;
+  wordInContext: string;
+  choicePrompt: string;
+  climaxTitle: string;
+  climaxIntro: string;
+  rewardIntro: string;
+  opponentName: string;
+}

@@ -33,7 +33,7 @@ import {
 import { WordBookType, Word, ScenarioContext, UserAccount, Level, ShopItem, ExamQuestion, ChatMessage } from "./types";
 import { WORD_BOOKS, SCENARIOS, SHOP_ITEMS, EXAM_QUESTIONS, generateStoryContent, getOpponentName } from "./data";
 import { TOTAL_LEVELS, getLevelPosition, selectWordsForLevel, getZoneName } from "./utils/mapUtils";
-import { WORD_SENTENCES } from "./sentences";
+import { WORD_SENTENCES, getAdaptedWordSentence } from "./sentences";
 import ScenarioChart from "./components/ScenarioChart";
 import AccountPanel from "./components/AccountPanel";
 
@@ -2125,7 +2125,7 @@ export default function App() {
 
                   {/* Trigger speech synthesis example sentence */}
                   {(() => {
-                    const match = WORD_SENTENCES[activeVocabWord.word.toLowerCase()];
+                    const match = getAdaptedWordSentence(activeVocabWord.word, account ? account.selectedScenario : "ancient_palace");
                     if (!match) return null;
                     return (
                       <div className="space-y-2 bg-indigo-50/30 p-4 border border-indigo-100 rounded-xl text-left">
